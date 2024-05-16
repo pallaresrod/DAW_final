@@ -7,15 +7,38 @@ use Steampixel\Route;
 class FrontController {
 
     static function main() {
-        
+
         //ruta hacia la página de inicio
         Route::add('/',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\InicioController();
-                        $controlador->index();
-                    }
-                    , 'get');
-        
+                function () {
+                    $controlador = new \Com\Daw2\Controllers\InicioController();
+                    $controlador->index();
+                }
+                , 'get');
+
+        //ruta hacia la págia de usuarios
+        Route::add('/usuarios',
+                function () {
+                    $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                    $controlador->mostrarTodos();
+                }
+                , 'get');
+
+        //añadir usuarios
+        Route::add('/usuarios/add',
+                function () {
+                    $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                    $controlador->mostrarAdd();
+                }
+                , 'get');
+
+        Route::add('/usuarios/add',
+                function () {
+                    $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                    $controlador->processAdd();
+                }
+                , 'post');
+
         //no se encuentra la ruta. Error 404
         Route::pathNotFound(
                 function () {
@@ -31,9 +54,10 @@ class FrontController {
                     $controller->error405();
                 }
         );
-        
+
         Route::run();
     }
 
 }
+
 ?>

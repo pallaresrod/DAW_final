@@ -1,5 +1,30 @@
+<!-- 
+Esta página contiene el menu principal del sitio, situado en el header
+-->
 
 <!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Heading -->
+<div class="sidebar-heading text-success">
+    Personal
+</div>
+
+<!-- Nav Item - Pages Collapse Menu -- Usuarios -->
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers"
+       aria-expanded="true" aria-controls="collapseUsers">
+        <i class="fas fa-fw fa-users"></i>
+        <span>Usuarios</span>
+    </a>
+    <div id="collapseUsers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/usuarios">Ver usuarios</a>
+            <a class="collapse-item" href="/usuarios/add">Añadir usuario</a>
+        </div>
+    </div>
+</li>
+
 <hr class="sidebar-divider">
 
 <!-- Heading -->
@@ -71,13 +96,6 @@
     </div>
 </li>
 
-<!-- Nav Item - Charts -->
-<li class="nav-item">
-    <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Charts</span></a>
-</li>
-
 <!-- Nav Item - Tables -->
 <li class="nav-item">
     <a class="nav-link" href="tables.html">
@@ -90,7 +108,7 @@
 
 <!-- Sidebar Toggler (Sidebar) -->
 <div class="text-center d-none d-md-inline">
-    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    <button class="rounded-circle border-0 bg-gradient-success" id="sidebarToggle"></button>
 </div>
 
 </ul>
