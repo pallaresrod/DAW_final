@@ -6,21 +6,28 @@
         <h1 class="h3 mb-0 text-gray-800"><?php echo $titulo ?></h1>
     </div>
 
-
+    <?php
+    if (isset($errores['desconocido'])){
+    ?>
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-gradient-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="h5 mb-0 font-weight-bold text-gray-100">Error</div>
+                        <div class="text-m font-weight-bold text-gray-100 text-uppercase mb-1">
+                            Error</div>
+                        <div class="mb-0 font-weight-bold text-gray-100"><?php echo $errores['desconocido'] ?></div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-warning-triangle fa-2x text-gray-100"></i>
+                        <i class="fas fa-exclamation-circle fa-2x text-gray-100"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <?php
+    }
+    ?>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">

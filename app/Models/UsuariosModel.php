@@ -6,13 +6,21 @@ namespace Com\Daw2\Models;
 
 class UsuariosModel extends \Com\Daw2\Core\BaseModel {
 
-    //devuelve información sobre los usuarios
+    /**
+     * selecciona de la tabla usuario y rol los datos de todos los usuarios
+     * @return array devuelve toda la info de los usuarios
+     */
     function getAll(): array {
         return $this->pdo->query("SELECT us.nombre, us.email, us.last_log, r.nombreRol "
                 . "FROM usuario us LEFT JOIN rol r ON r.idRol = us.idRol ORDER BY us.nombre")->fetchAll();
     }
     
-    //devuelve un usuario con el mismo email que el pasado por párametro
+    /**
+     * busca un ususario con el email pasado como parametro
+     * @param string $email el email que se busca
+     * @return array|null si hay un usuario con ese email se pasa la fila de info en modo array
+     * si el email no coincide se devuelve null
+     */
     function loadByEmail(string $email): ?array {
         $query = "SELECT * FROM usuario WHERE email = ?";
         $stmt = $this->pdo->prepare($query);
@@ -24,7 +32,12 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
         }
     }
     
-    //devuelve un usuario con el mismo login que el pasado por párametro
+    /**
+     * busca un ususario con el login pasado como parametro
+     * @param string $login el login que se busca
+     * @return array|null si hay un usuario con ese login se pasa la fila de info en modo array
+     * si el login no coincide se devuelve null
+     */
     function loadByLogin(string $login): ?array {
         $query = "SELECT * FROM usuario WHERE login = ?";
         $stmt = $this->pdo->prepare($query);
@@ -36,8 +49,13 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
         }
     }
     
+    /**
+     * introducee un usuario al sistema
+     * @param array $data los datos necesarios para introducir el usuario
+     * @return int devuelve 1 si la operación se realizo sin problema, 0 si no se puedo realizar
+     */
     function insertUsuarioSistema(array $data): int {
-        $query = "INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES(:login, :pass, :email, :idRol)";
+        $query = "INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES(:login, :pass, :nombre, :email, :idRol)";
         $stmt = $this->pdo->prepare($query);
         $vars = [
             'login' => $data['login'],
@@ -51,6 +69,17 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
         } else {
             return 0;
         }
+    }
+    
+    /**
+     * actualiza la última vez que un usuario se conecto
+     * @param string $login el ususario que se actualiza
+     */
+    function updateLogin(string $login) {
+        $query = "UPDATE usuario SET last_log= now() WHERE login= ?";
+        $stmt = $this->pdo->prepare($query);
+        
+        $stmt->execute([$login]);
     }
 
     //NO PROYECTO, EJERCICIOS CLASE
@@ -111,10 +140,4 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
         }
     }
 
-    function updateLogin(int $id) {
-        $query = "UPDATE usuario_sistema SET last_date= now() WHERE id_usuario= ?";
-        $stmt = $this->pdo->prepare($query);
-        
-        $stmt->execute([$id]);
-    }
 }

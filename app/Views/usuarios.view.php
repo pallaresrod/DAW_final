@@ -36,7 +36,7 @@
                                 <th>Email</th>                          
                                 <th>Rol</th>
                                 <th>Última conexión</th>
-                                <th></th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,9 +46,19 @@
                                 <tr>
                                     <td><?php echo $u['nombre']; ?></td>
                                     <td><a href="mailto: <?php echo $u['email']; ?>"><?php echo $u['email']; ?></a></td>
-                                    <td><?php echo $u['nombreRol']; ?></td>                            
-                                    <td><?php echo $u['nombre_idioma']; ?></td>   
-                                    <td><?php echo $u['last_log']; ?></td>     
+                                    <td><?php echo $u['nombreRol']; ?></td>      
+                                    <td><?php echo (isset($u['last_log'])) ? $u['last_log'] : '-'; ?></td>     
+                                    <td>                              
+                                        <a class="btn btn-success ml-1"><i class="fas fa-eye text-white"></i></a>
+                                        <?php
+                                        //if (strpos($_SESSION['permisos']['usuarios_sistema'], 'w') !== false) {
+                                            ?>
+                                            <a class="btn btn-dark ml-1"><i class="fas fa-edit text-white"></i></a>
+                                            <a class="btn btn-danger ml-1"><i class="fas fa-trash text-white"></i></a>
+                                            <?php
+                                        //}
+                                        ?>
+                                    </td>
                                 </tr>
                                 <?php
                             }
