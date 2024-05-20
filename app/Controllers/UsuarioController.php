@@ -94,7 +94,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
 
         return $permisos;
     }
-    
+
     /**
      * procesa la petición de cerrar sesión
      */
@@ -165,13 +165,25 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'addUsuario.view.php', 'templates/footer.view.php'), $data);
     }
 
+    /**
+     * comprueba que el formulario de añadir un usuario este bien
+     * @param array $data la información ha comprobar
+     * @return array los errores encontrados
+     */
+    private function checkAddForm(array $data): array {
+        $errores = $this->checkForm($data);
+        array_merge($errores, $this->checkPassForm($data));
+
+        return $errores;
+    }
+
     /*
      * función que comprueba que los datos del formularios sean correctos 
      * @param array $data los datos introducidos
      * @return array los errores encontrados
      */
 
-    private function checkAddForm(array $data): array {
+    private function checkForm(array $data): array {
         $errores = [];
 
         //comprueba el nombre
@@ -194,7 +206,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             }
         }
 
-        //comprueba el login
+        //login
         if (empty($data['login'])) {
             $errores['login'] = 'Inserte un nombre de usuario';
         } else if (!preg_match('/^[a-zA-Z0-9_]{4,255}$/', $data['login'])) {
@@ -218,7 +230,17 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             }
         }
 
-        //contraseña
+        return $errores;
+    }
+
+    /**
+     * comprueba que las contraseñas metidas en un formulario sean correctas
+     * @param array $data los datos ha comprobar
+     * @return array los errores encontrados
+     */
+    private function checkPassForm(array $data): array {
+        $errores = [];
+
         if (empty($data['pass1'])) {
             $errores['pass1'] = 'Introduzca una contraseña';
         } else if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $data['pass1'])) {
@@ -231,35 +253,121 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
 
         return $errores;
     }
-    
+
     /**
      * muestra la actividad de un usuario
      * @param type $idUsuario el usuario del que se muestra la actividad
      */
-    function mostrarActividadUser($idUsuario){
+    function mostrarActividadUser(int $idUsuario) {
         $modelo = new \Com\Daw2\Models\UsuariosModel();
         $usuario = $modelo->loadById($idUsuario);
-        
+
         $data = array(
             'titulo' => 'Actividad del usuario',
             'nombre' => $usuario['nombre'],
             'actividad' => $modelo->getActivity($idUsuario)
         );
 
-        $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
+        //un ususario puede ver su propia actividad, pero solo un admin puede ver la actividad del resto
+        if ($_SESSION['usuario']['idUsuario'] === $idUsuario) {
+            $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
+        } else if (strpos($_SESSION['permisos'], 'w') !== false) {
+            $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
+        } else {
+            $error = new \Com\Daw2\Controllers\ErroresController();
+            $error->error404();
+        }
     }
-    
-    function mostrarUsuario($idUsuario){
+
+    /**
+     * muestra la informacion de un usuario 
+     * @param int $idUsuario el usuario del que se muestra la info
+     */
+    function mostrarUsuario(int $idUsuario) {
         $modelo = new \Com\Daw2\Models\UsuariosModel();
         $rolModel = new \Com\Daw2\Models\RolModel();
         $usuario = $modelo->loadById($idUsuario);
-        
+
+        //al compartir vista con edit necesitamos una manera de que si esta viendo el usuario no lo pueda editar
         $readOnly = true;
 
         $data = array(
             'titulo' => 'Información de usuario',
             'roles' => $rolModel->getAll(),
             'input' => $usuario,
+            'readonly' => $readOnly
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * muestra el formulario para editar el rol de otros usuarios
+     * @param int $idUsuario el ususario que se quiere editar
+     */
+    function mostrarEdit(int $idUsuario) {
+        $modelo = new \Com\Daw2\Models\UsuariosModel();
+        $rolModel = new \Com\Daw2\Models\RolModel();
+        $usuario = $modelo->loadById($idUsuario);
+
+        //al compartir vista con edit necesitamos una manera de que si esta viendo el usuario no lo pueda editar
+        $readOnly = false;
+
+        $data = array(
+            'titulo' => 'Editar usuario',
+            'roles' => $rolModel->getAll(),
+            'input' => $usuario,
+            'readonly' => $readOnly
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * procesa la edición de un ususario
+     * @param int $idUsuario el usuario que se ha editado
+     */
+    function procesarEdit(int $idUsuario) {
+
+        $errores = [];
+        //comprueba errores
+        if (empty($_POST['idRol'])) {
+            $errores['idRol'] = 'Por favor, seleccione un rol';
+        } else {
+            $rolModel = new \Com\Daw2\Models\RolModel();
+            //comprueba que el rol existe en la bbdd
+            if (!filter_var($_POST['idRol'], FILTER_VALIDATE_INT) || is_null($rolModel->loadRol((int) $_POST['idRol']))) {
+                $errores['idRol'] = 'Valor incorrecto';
+            }
+        }
+
+        //si no hay errores se inserta el valor en la base de datos
+        if (count($errores) == 0) {
+            //solo se pueden editar perfiles que no sean del usuario que intenta editarlos
+            if ($_SESSION['usuario']['idUsuario'] !== $idUsuario) {
+                $model = new \Com\Daw2\Models\UsuariosModel();
+                $update = $model->updateidRol($idUsuario, (int) $_POST['idRol']);
+
+                //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+                if ($update > 0) {
+                    header('location: /usuarios');
+                    die;
+                } else {
+                    $errores['desconocido'] = 'Error desconocido. No se ha editado el usuario.';
+                }
+            } else {
+                $errores['desconocido'] = 'No puede cambiarse el rol a si mismo.';
+            }
+        }
+
+        $rolModel = new \Com\Daw2\Models\RolModel();
+        $readOnly = false;
+
+        $data = array(
+            'titulo' => 'Editar usuario',
+            'roles' => $rolModel->getAll(),
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'errores' => $errores,
             'readonly' => $readOnly
         );
 

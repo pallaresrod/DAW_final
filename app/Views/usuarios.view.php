@@ -4,8 +4,14 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><?php echo $titulo ?></h1>
-        <a href="/usuarios/add" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Añadir usuario</a>
+        <?php
+        if (strpos($_SESSION['permisos'], 'w') !== false) {
+            ?>
+            <a href="/usuarios/add" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Añadir usuario</a>
+                <?php
+            }
+            ?>
     </div>
 
     <div class="card shadow mb-4">
@@ -51,12 +57,12 @@
                                     <td>                              
                                         <a class="btn btn-success ml-1" href="/usuario/view/<?php echo $u['idUsuario']; ?>"><i class="fas fa-eye text-white"></i></a>
                                         <?php
-                                        //if (strpos($_SESSION['permisos']['usuarios_sistema'], 'w') !== false) {
+                                        if (strpos($_SESSION['permisos'], 'w') !== false) {
                                             ?>
-                                            <a class="btn btn-dark ml-1"><i class="fas fa-edit text-white"></i></a>
+                                            <a class="btn btn-dark ml-1" href="/usuario/edit/<?php echo $u['idUsuario']; ?>"><i class="fas fa-edit text-white"></i></a>
                                             <a class="btn btn-danger ml-1"><i class="fas fa-trash text-white"></i></a>
                                             <?php
-                                        //}
+                                        }
                                         ?>
                                     </td>
                                 </tr>

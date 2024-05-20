@@ -46,21 +46,6 @@ class FrontController {
                     }
                     , 'get');
 
-            //añadir usuarios
-            Route::add('/usuarios/add',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
-                        $controlador->mostrarAdd();
-                    }
-                    , 'get');
-
-            Route::add('/usuarios/add',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
-                        $controlador->processAdd();
-                    }
-                    , 'post');
-
             //cerrar sesión
             Route::add('/session/borrar',
                     function () {
@@ -84,6 +69,40 @@ class FrontController {
                         $controlador->mostrarActividadUser((int) $id);
                     }
                     , 'get');
+
+            //solo pueden los que tienen permiso de edición
+            if (strpos($_SESSION['permisos'], 'w') !== false) {
+
+                //editar un usuario
+                Route::add('/usuario/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->mostrarEdit((int) $id);
+                        }
+                        , 'get');
+
+                Route::add('/usuario/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->procesarEdit((int) $id);
+                        }
+                        , 'post');
+
+                //añadir usuarios
+                Route::add('/usuarios/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->mostrarAdd();
+                        }
+                        , 'get');
+
+                Route::add('/usuarios/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->processAdd();
+                        }
+                        , 'post');
+            }
 
             //no se encuentra la ruta. Error 404
             Route::pathNotFound(

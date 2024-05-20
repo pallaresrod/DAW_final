@@ -74,9 +74,13 @@ head y el principop del body: header y parte del main de cada página
                                     <!-- Dropdown - User Information -->
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                          aria-labelledby="userDropdown">
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="/usuario/view/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
                                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            Perfil
+                                            Ver perfil
+                                        </a>
+                                        <a class="dropdown-item" href="/usuario/edit/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
+                                            <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Editar perfil
                                         </a>
                                         <a class="dropdown-item" href="/actividad/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
                                             <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>

@@ -115,6 +115,29 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
         
         return $stmt->fetchAll();
     }
+    
+    /**
+     * actualiza el rol de un ususario
+     * @param int $idUsuario el usuario que se actualiza
+     * @param int $idRol el nuevo rol
+     * @return int devuelve 1 si la operación se realizo sin problema, 0 si no se puedo realizar
+     */
+    function updateidRol(int $idUsuario, int $idRol) {
+        $query = "UPDATE usuario SET idRol = :idRol WHERE idUsuario= :idUsuario";
+        
+        $stmt = $this->pdo->prepare($query);
+        
+        $vars = [
+            'idRol' => $idRol,
+            'idUsuario' => $idUsuario
+        ];
+        
+        if ($stmt->execute($vars)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     //NO PROYECTO, EJERCICIOS CLASE
 

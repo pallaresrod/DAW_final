@@ -16,7 +16,7 @@
                         <div class="col mr-2">
                             <div class="text-m font-weight-bold text-gray-100 text-uppercase mb-1">
                                 Error</div>
-                            <div class="mb-0 font-weight-bold text-gray-100"><?php echo $errores['desconocido'] ?></div>
+                            <div class="mb-0 text-gray-100"><?php echo $errores['desconocido'] ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-exclamation-circle fa-2x text-gray-100"></i>
@@ -39,13 +39,13 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <input type="text" class="form-control " id="nombre" name="nombre"
                                        value="<?php echo isset($input['nombre']) ? $input['nombre'] : ''; ?>" placeholder="Nombre completo"
-                                       <?php echo isset($readonly) ? 'readonly' : ''; ?>>
+                                       readonly>
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
                                 <input type="email" class="form-control" id="email" name="email"
                                        value="<?php echo isset($input['email']) ? $input['email'] : ''; ?>" placeholder="Email"
-                                       <?php echo isset($readonly) ? 'readonly' : ''; ?>>
+                                       readonly>
                                 <p class="text-danger"><?php echo isset($errores['email']) ? $errores['email'] : ''; ?></p>
                             </div>
                         </div>
@@ -53,11 +53,11 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <input type="text" class="form-control" id="login" name="login"
                                        value="<?php echo isset($input['login']) ? $input['login'] : ''; ?>" placeholder="Usuario"
-                                       <?php echo isset($readonly) ? 'readonly' : ''; ?>>
+                                       readonly>
                                 <p class="text-danger"><?php echo isset($errores['login']) ? $errores['login'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control" name="idRol" <?php echo isset($readonly) ? 'readonly' : ''; ?>>
+                                <select class="form-control" name="idRol" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>>
                                     <option value="">Rol</option>
                                     <?php
                                     foreach ($roles as $r) {
@@ -70,28 +70,25 @@
                                 </select>
                             </div>
                         </div>
-                        <?php if (!$readonly) { ?>
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="password" class="form-control" id="pass1" name="pass1" 
-                                           placeholder="Contraseña">
-                                    <p class="text-danger"><?php echo isset($errores['pass1']) ? $errores['pass1'] : ''; ?></p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="password" class="form-control" id="pass2" name="pass2" 
-                                           placeholder="Verifique la contraseña">
-                                    <p class="text-danger"><?php echo isset($errores['pass2']) ? $errores['pass2'] : ''; ?></p>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
                         <div class="col-12 text-right">
                             <?php
-                            if($readonly){
-                            ?>                            
-                            <a href="/actividad/<?php echo $input['idUsuario']; ?>" class="btn btn-primary ml-3">Ver actividad del usuario</a>  
+                            if (isset($readonly)) {
+                                //solo se mostrará al estar en modo de ver usuario  y el usuario que quiere verlo es admin
+                                if ($readonly && (strpos($_SESSION['permisos'], 'w') !== false)) {
+                                    ?>                            
+                                    <a href="/actividad/<?php echo $input['idUsuario']; ?>" class="btn btn-primary ml-3">Ver actividad del usuario</a>  
+                                    <?php
+                                }
+                            }
+                            ?>
                             <?php
+                            //solo se mostrará al estar en modo de edición de usuario
+                            if (isset($readonly)) {
+                                if (!$readonly) {
+                                    ?>                            
+                                    <input type="submit" value="Aceptar" name="enviar" class="btn btn-primary"/>
+                                    <?php
+                                }
                             }
                             ?>
                             <a href="/usuarios" class="btn btn-secondary ml-3">Salir</a>                            
