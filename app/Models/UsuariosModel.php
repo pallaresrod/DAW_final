@@ -11,7 +11,7 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
      * @return array devuelve toda la info de los usuarios
      */
     function getAll(): array {
-        return $this->pdo->query("SELECT us.nombre, us.email, us.last_log, r.nombreRol "
+        return $this->pdo->query("SELECT us.idUsuario, us.nombre, us.email, us.last_log, r.nombreRol "
                 . "FROM usuario us LEFT JOIN rol r ON r.idRol = us.idRol ORDER BY us.nombre")->fetchAll();
     }
     
@@ -50,6 +50,23 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
     }
     
     /**
+     * busca un ususario con el id pasado como parametro
+     * @param int $idUsuario el id que se busca
+     * @return array|null si hay un usuario con ese id se pasa la fila de info en modo array
+     * si el id no coincide se devuelve null
+     */
+    function loadById(int $idUsuario): ?array {
+        $query = "SELECT * FROM usuario WHERE idUsuario = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$idUsuario]);
+        if ($row = $stmt->fetch()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
      * introducee un usuario al sistema
      * @param array $data los datos necesarios para introducir el usuario
      * @return int devuelve 1 si la operación se realizo sin problema, 0 si no se puedo realizar
@@ -72,14 +89,31 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
     }
     
     /**
-     * actualiza la última vez que un usuario se conecto
-     * @param string $login el ususario que se actualiza
+     * actualiza la última vez que un usuario se conecto y tambien lo añade al log de actividad
+     * @param int $idUsuario el usuario que se actualiza
      */
-    function updateLogin(string $login) {
-        $query = "UPDATE usuario SET last_log= now() WHERE login= ?";
-        $stmt = $this->pdo->prepare($query);
+    function updateLogin(int $idUsuario) {
+        $query = "UPDATE usuario SET last_log= now() WHERE idUsuario= ?";
+        $query2 = "INSERT INTO activityLog (idUsuario, log) VALUES (:idUsuario, now())";
         
-        $stmt->execute([$login]);
+        $stmt = $this->pdo->prepare($query);
+        $stmt2 = $this->pdo->prepare($query2);
+        
+        $stmt2->execute([$idUsuario]);
+        $stmt->execute([$idUsuario]);
+    }
+    
+    /**
+     * busca todos las veces que un usario concreto se ha conectado
+     * @param int $idUsuario el ususario que se quiere buscar
+     * @return type devuelve todas las veces que el usuario se conecto en modo array
+     */
+    function getActivity(int $idUsuario){
+        $query = "SELECT * FROM activityLog WHERE idUsuario = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$idUsuario]);
+        
+        return $stmt->fetchAll();
     }
 
     //NO PROYECTO, EJERCICIOS CLASE

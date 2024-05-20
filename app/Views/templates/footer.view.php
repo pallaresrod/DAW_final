@@ -7,7 +7,11 @@ el funcionamiento de la app
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>Litoria Produccións</span>
+            <span>Litoria Produccións <?php echo date('Y'); ?></span>
+        </div>
+        <div class="copyright text-center my-auto p-1">
+            <span> Iconos diseñados por <a href="https://www.flaticon.es/autores/kmg-design" title="kmg design"> kmg design </a> 
+                from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></span>
         </div>
     </div>
 </footer>
@@ -36,10 +40,10 @@ el funcionamiento de la app
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">Seleciona "Cerrar sesión" si está preparado para cerrar la sesión actual.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" href="login.html">Logout</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger" href="/session/borrar">Cerrar sesión</a>
             </div>
         </div>
     </div>

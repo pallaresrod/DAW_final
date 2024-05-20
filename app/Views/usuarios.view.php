@@ -22,7 +22,7 @@
     <!-- DataTale -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Uusarios</h6>
+            <h6 class="m-0 font-weight-bold text-success">Usarios</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -49,7 +49,7 @@
                                     <td><?php echo $u['nombreRol']; ?></td>      
                                     <td><?php echo (isset($u['last_log'])) ? $u['last_log'] : '-'; ?></td>     
                                     <td>                              
-                                        <a class="btn btn-success ml-1"><i class="fas fa-eye text-white"></i></a>
+                                        <a class="btn btn-success ml-1" href="/usuario/view/<?php echo $u['idUsuario']; ?>"><i class="fas fa-eye text-white"></i></a>
                                         <?php
                                         //if (strpos($_SESSION['permisos']['usuarios_sistema'], 'w') !== false) {
                                             ?>

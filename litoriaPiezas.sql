@@ -1,3 +1,7 @@
+-- drop database if exists LitoriaPiezas;
+-- create database LitoriaPiezas;s
+-- use LitoriaPiezas;
+
 -- BASE DE DATOS: litoriaPiezas
 
 -- al insertar un valor de 0 en una columna AUTO_INCREMENT, no se generará automáticamente el siguiente valor, sino que se insertará literalmente el 0
@@ -9,12 +13,18 @@ SET time_zone = "+00:00";
 
 -- estructura tabla usuario
 CREATE TABLE usuario (
-	login VARCHAR(100) PRIMARY KEY,
+	idUsuario INT AUTO_INCREMENT PRIMARY KEY,
+	login VARCHAR(100) NOT NULL,
     pass VARCHAR(255),
     nombre VARCHAR(100),
     email VARCHAR(100),
     idRol INT,
     last_log datetime DEFAULT NULL
+);
+
+CREATE TABLE activityLog (
+	idUsuario INT,
+    log datetime
 );
 
 -- estructura aux rol
@@ -91,13 +101,18 @@ CREATE TABLE piezas_evento (
 -- CREACION CLAVES FORANEAS
 ALTER TABLE usuario ADD FOREIGN KEY (idRol) REFERENCES rol(idRol);
 
+-- creacion de una clave primaria compuesta para la tabla activityLog
+ALTER TABLE activityLog ADD PRIMARY KEY (idUsuario, log);
+-- creacion de clave foranea
+ALTER TABLE activityLog ADD FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario);
+
 ALTER TABLE pieza ADD FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria);
 
 ALTER TABLE categoria ADD FOREIGN KEY (idFamilia) REFERENCES familia(idFamilia);
 
 ALTER TABLE evento ADD FOREIGN KEY (idCliente) REFERENCES cliente(idCliente);
 
--- creacion de una clave foranea compuesta para la tabla piezas_evento
+-- creacion de una clave primaria compuesta para la tabla piezas_evento
 ALTER TABLE piezas_evento ADD PRIMARY KEY (idPieza, idEvento);
 -- creacion de las dos claves foraneas
 ALTER TABLE piezas_evento ADD FOREIGN KEY (idPieza) REFERENCES pieza(idPieza);
@@ -117,4 +132,3 @@ INSERT INTO pieza (idPieza, nombreOficial, cofigoMarca, denominacion, foto, prec
 -- cambiamos como llamamos y describimos los roles
 UPDATE rol SET nombreRol = 'edicion', descripcion = 'Permisos para hacer modificaciones' WHERE idRol = 1;
 UPDATE rol SET nombreRol = 'lectura', descripcion = 'Permisos de solo lectura' WHERE idRol = 2;
-

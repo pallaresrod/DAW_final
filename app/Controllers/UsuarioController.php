@@ -31,12 +31,13 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             if (!is_null($usuario)) {
                 if (password_verify($pass, $usuario["pass"])) {
 
+                    //al hacer esto borramos del array de ususario la pass, de esta manera cuando usuario se guarde en una variable de sesión no se guarde la contraseña
                     unset($usuario["pass"]);
 
                     $_SESSION["usuario"] = $usuario;
                     $_SESSION["permisos"] = $this->getPermisos($usuario["idRol"]);
 
-                    $modelo->updateLogin($usuario["login"]);
+                    $modelo->updateLogin($usuario["idUsuario"]);
 
                     header("location: /");
                 } else {
@@ -70,9 +71,10 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     }
 
     /**
-     * 
-     * @param int $idRol
-     * @return array
+     * dependiendo del rol que tengas te da unos permisos u otros,
+     * hay dos roles, de edicion o de lectura, por ello los permisos que puedes tener son rw (lectura y edición) o solo r (lectura)
+     * @param int $idRol el rol del usuario
+     * @return string los permisos que tiene el ususario
      */
     private function getPermisos(int $idRol): string {
         $permisos = '';
@@ -91,6 +93,14 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
         }
 
         return $permisos;
+    }
+    
+    /**
+     * procesa la petición de cerrar sesión
+     */
+    function procesarLogOut() {
+        session_destroy();
+        header("location: /");
     }
 
     /**
@@ -118,7 +128,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             'roles' => $rolModel->getAll()
         );
 
-        $this->view->showViews(array('templates/header.view.php', 'editAddUsuario.view.php', 'templates/footer.view.php'), $data);
+        $this->view->showViews(array('templates/header.view.php', 'addUsuario.view.php', 'templates/footer.view.php'), $data);
     }
 
     /**
@@ -152,7 +162,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             'errores' => $errores
         );
 
-        $this->view->showViews(array('templates/header.view.php', 'editAddUsuario.view.php', 'templates/footer.view.php'), $data);
+        $this->view->showViews(array('templates/header.view.php', 'addUsuario.view.php', 'templates/footer.view.php'), $data);
     }
 
     /*
@@ -220,6 +230,40 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
         }
 
         return $errores;
+    }
+    
+    /**
+     * muestra la actividad de un usuario
+     * @param type $idUsuario el usuario del que se muestra la actividad
+     */
+    function mostrarActividadUser($idUsuario){
+        $modelo = new \Com\Daw2\Models\UsuariosModel();
+        $usuario = $modelo->loadById($idUsuario);
+        
+        $data = array(
+            'titulo' => 'Actividad del usuario',
+            'nombre' => $usuario['nombre'],
+            'actividad' => $modelo->getActivity($idUsuario)
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    function mostrarUsuario($idUsuario){
+        $modelo = new \Com\Daw2\Models\UsuariosModel();
+        $rolModel = new \Com\Daw2\Models\RolModel();
+        $usuario = $modelo->loadById($idUsuario);
+        
+        $readOnly = true;
+
+        $data = array(
+            'titulo' => 'Información de usuario',
+            'roles' => $rolModel->getAll(),
+            'input' => $usuario,
+            'readonly' => $readOnly
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
     }
 
 }

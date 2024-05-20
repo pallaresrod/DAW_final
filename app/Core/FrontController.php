@@ -61,6 +61,30 @@ class FrontController {
                     }
                     , 'post');
 
+            //cerrar sesión
+            Route::add('/session/borrar',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->procesarLogOut();
+                    }
+                    , 'get');
+
+            //ver info de un usuario
+            Route::add('/usuario/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->mostrarUsuario((int) $id);
+                    }
+                    , 'get');
+
+            //ver actividad de un usuario
+            Route::add('/actividad/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->mostrarActividadUser((int) $id);
+                    }
+                    , 'get');
+
             //no se encuentra la ruta. Error 404
             Route::pathNotFound(
                     function () {
