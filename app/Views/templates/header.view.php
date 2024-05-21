@@ -78,7 +78,7 @@ head y el principop del body: header y parte del main de cada página
                                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Ver perfil
                                         </a>
-                                        <a class="dropdown-item" href="/usuario/edit/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
+                                        <a class="dropdown-item" href="/editarPerfil/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
                                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Editar perfil
                                         </a>

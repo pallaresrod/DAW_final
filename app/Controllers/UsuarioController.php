@@ -109,10 +109,14 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     function mostrarTodos() {
         $modelo = new \Com\Daw2\Models\UsuariosModel();
 
-        $data = array(
-            'titulo' => 'Usuarios',
-            'usuarios' => $modelo->getAll()
-        );
+        $data = [];
+        $data['titulo'] = 'Usuarios';
+        $data['usuarios'] = $modelo->getAll();
+
+        if (isset($_SESSION['mensaje'])) {
+            $data['mensaje'] = $_SESSION['mensaje'];
+            unset($_SESSION['mensaje']);
+        }
 
         $this->view->showViews(array('templates/header.view.php', 'usuarios.view.php', 'templates/footer.view.php'), $data);
     }
@@ -133,9 +137,8 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
 
     /**
      * procesa el formulario de añadir un usuario una vez enviado
-     * @return void no se devuelve nada
      */
-    function processAdd(): void {
+    function processAdd() {
 
         //comprueba errores
         $errores = $this->checkAddForm($_POST);
@@ -165,34 +168,15 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'addUsuario.view.php', 'templates/footer.view.php'), $data);
     }
 
-    /**
-     * comprueba que el formulario de añadir un usuario este bien
-     * @param array $data la información ha comprobar
-     * @return array los errores encontrados
-     */
-    private function checkAddForm(array $data): array {
-        $errores = $this->checkForm($data);
-        array_merge($errores, $this->checkPassForm($data));
-
-        return $errores;
-    }
-
     /*
-     * función que comprueba que los datos del formularios sean correctos 
+     * comprueba que el formulario de añadir un usuario este bien
      * @param array $data los datos introducidos
      * @return array los errores encontrados
      */
 
-    private function checkForm(array $data): array {
+    private function checkAddForm(array $data): array {
         $errores = [];
-
-        //comprueba el nombre
-        if (empty($data['nombre'])) {
-            $errores['nombre'] = 'Inserte un nombre';
-        } else if (!preg_match('/^[a-zA-Z ]{1,255}$/', $data['nombre'])) {
-            $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
-        }
-
+        
         //email
         if (empty($data['email'])) {
             $errores['email'] = 'Inserte un email';
@@ -219,6 +203,13 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             }
         }
 
+        //comprueba el nombre
+        if (empty($data['nombre'])) {
+            $errores['nombre'] = 'Inserte un nombre';
+        } else if (!preg_match('/^[a-zA-Z ]{1,255}$/', $data['nombre'])) {
+            $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
+        }
+
         //rol
         if (empty($data['idRol'])) {
             $errores['idRol'] = 'Por favor, seleccione un rol';
@@ -229,6 +220,8 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
                 $errores['idRol'] = 'Valor incorrecto';
             }
         }
+        
+        array_merge($errores, $this->checkPassForm($data));
 
         return $errores;
     }
@@ -308,19 +301,28 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     function mostrarEdit(int $idUsuario) {
         $modelo = new \Com\Daw2\Models\UsuariosModel();
         $rolModel = new \Com\Daw2\Models\RolModel();
-        $usuario = $modelo->loadById($idUsuario);
 
         //al compartir vista con edit necesitamos una manera de que si esta viendo el usuario no lo pueda editar
         $readOnly = false;
 
-        $data = array(
-            'titulo' => 'Editar usuario',
-            'roles' => $rolModel->getAll(),
-            'input' => $usuario,
-            'readonly' => $readOnly
-        );
+        //un usuario, aunque tenga permisos de edición, no se puede cambiar el rol a si mismo
+        if ($_SESSION['usuario']['idUsuario'] !== $idUsuario) {
+            $data = array(
+                'titulo' => 'Editar usuario',
+                'roles' => $rolModel->getAll(),
+                'input' => $modelo->loadById($idUsuario),
+                'readonly' => $readOnly
+            );
 
-        $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
+            $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
+        } else {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se puede editar a uno mismo. Si quiera cambiar información de su usuario hagalo desde el menú de perfil, ariba a la derecha.';
+
+            $_SESSION['mensaje'] = $mensaje;
+            header('location: /usuarios');
+        }
     }
 
     /**
@@ -330,7 +332,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     function procesarEdit(int $idUsuario) {
 
         $errores = [];
-        //comprueba errores
+        //comprueba errores, como solo se puede editar el rol, lo hacemos dentro de la función
         if (empty($_POST['idRol'])) {
             $errores['idRol'] = 'Por favor, seleccione un rol';
         } else {
@@ -343,20 +345,15 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
 
         //si no hay errores se inserta el valor en la base de datos
         if (count($errores) == 0) {
-            //solo se pueden editar perfiles que no sean del usuario que intenta editarlos
-            if ($_SESSION['usuario']['idUsuario'] !== $idUsuario) {
-                $model = new \Com\Daw2\Models\UsuariosModel();
-                $update = $model->updateidRol($idUsuario, (int) $_POST['idRol']);
+            $model = new \Com\Daw2\Models\UsuariosModel();
+            $update = $model->updateidRol($idUsuario, (int) $_POST['idRol']);
 
-                //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
-                if ($update > 0) {
-                    header('location: /usuarios');
-                    die;
-                } else {
-                    $errores['desconocido'] = 'Error desconocido. No se ha editado el usuario.';
-                }
+            //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+            if ($update > 0) {
+                header('location: /usuarios');
+                die;
             } else {
-                $errores['desconocido'] = 'No puede cambiarse el rol a si mismo.';
+                $errores['desconocido'] = 'Error desconocido. No se ha editado el usuario.';
             }
         }
 
@@ -372,6 +369,150 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
         );
 
         $this->view->showViews(array('templates/header.view.php', 'editViewUsuario.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * procesa la petición de borrar un ususario
+     * @param int $id el ususario que se quiere borrar
+     */
+    function processDelete(int $idUsuario) {
+        $model = new \Com\Daw2\Models\UsuariosModel();
+
+        if ($_SESSION["usuario"]["idUsuario"] != $idUsuario) {
+            if (!$model->delete($idUsuario)) {
+                $mensaje = [];
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'No se ha podido borrar al usuario.';
+            } else {
+                $mensaje = [];
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'Usuario eliminado con éxito.';
+            }
+        } else {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se puede borrar a uno mismo';
+        }
+
+        $_SESSION['mensaje'] = $mensaje;
+        header('location: /usuarios');
+    }
+
+    /**
+     * muestra el formulario para editar un perfil
+     * @param int $idUsuario el usuario que quiere editar su perfil
+     */
+    function editarPefil(int $idUsuario) {
+        $modelo = new \Com\Daw2\Models\UsuariosModel();
+        $rolModel = new \Com\Daw2\Models\RolModel();
+
+        //solo un usuario puede editar su información a si mismo 
+        if ($_SESSION['usuario']['idUsuario'] == $idUsuario) {
+            $data = array(
+                'titulo' => 'Editar perfil',
+                'roles' => $rolModel->getAll(),
+                'input' => $modelo->loadById($idUsuario)
+            );
+
+            $this->view->showViews(array('templates/header.view.php', 'editPerfil.view.php', 'templates/footer.view.php'), $data);
+        } else {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'Esta opción es solo para editar su propia cuenta';
+
+            $_SESSION['mensaje'] = $mensaje;
+            header('location: /usuarios');
+        }
+    }
+    
+    /**
+     * procesa la petición para editar un perfil
+     * @param int $idUsuario el usuario que quiere editar su perfil
+     */
+    function procesarEditarPerfil(int $idUsuario) {
+        //comprueba errores
+        $errores = $this->checkEditPerfilForm($_POST, $idUsuario);
+        
+        //si no hay errores se actualizan los valores valor en la base de datos
+        if (count($errores) == 0) {
+            $model = new \Com\Daw2\Models\UsuariosModel();
+            
+            $usuario = $model->editPerfil($idUsuario, $_POST);
+            
+            if(!empty($_POST['pass1'])){
+                $pass= $model->editPassword($idUsuario, $_POST['pass1']);
+            }else{
+                $pass = true;
+            }
+            
+            if ($usuario && $pass) {
+                header('location: /usuarios');
+                die;
+            } else {
+                $errores['desconocido'] = 'Error desconocido. No se ha editado el usuario.';
+            }
+        }
+
+        $rolModel = new \Com\Daw2\Models\RolModel();
+
+        $data = array(
+            'titulo' => 'Editar perfil',
+            'roles' => $rolModel->getAll(),
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'errores' => $errores
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editPerfil.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * comprueba que el formulario de editar el perfil este correcto
+     * @param array $data los datos del formulario
+     * @param int $idUsuario el id del usuario que quiere editar sus datos
+     * @return array los errores encontrados
+     */
+    function checkEditPerfilForm(array $data, int $idUsuario): array {
+        
+        $errores = [];
+        
+        //comprueba el nombre
+        if (empty($data['nombre'])) {
+            $errores['nombre'] = 'Inserte un nombre';
+        } else if (!preg_match('/^[a-zA-Z ]{1,255}$/', $data['nombre'])) {
+            $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
+        }
+        
+        //email
+        if (empty($data['email'])) {
+            $errores['email'] = 'Inserte un email';
+        } else if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errores['email'] = 'Inserte un email válido';
+        } else {
+            $model = new \Com\Daw2\Models\UsuariosModel();
+            $usuario = $model->loadByEmailNotId($data['email'], $idUsuario);
+            if (!is_null($usuario)) {
+                $errores['email'] = 'El email seleccionado ya está en uso';
+            }
+        }
+
+        //login
+        if (empty($data['login'])) {
+            $errores['login'] = 'Inserte un nombre de usuario';
+        } else if (!preg_match('/^[a-zA-Z0-9_]{4,255}$/', $data['login'])) {
+            $errores['login'] = 'El nombre de usuario debe estar entre 4 y 255 caracteres y solo puede contener letras, números y _';
+        } else {
+            $model = new \Com\Daw2\Models\UsuariosModel();
+            $usuario = $model->loadByLoginNotId($data['login'], $idUsuario);
+            if (!is_null($usuario)) {
+                $errores['login'] = 'El nombre de usuario seleccionado ya está en uso';
+            }
+        }
+        
+        if(!empty($data['pass1'])){
+            array_merge($errores, $this->checkPassForm($data));
+        }
+
+        return $errores;
     }
 
 }

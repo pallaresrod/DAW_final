@@ -10,7 +10,7 @@ Esta página contiene el menu principal del sitio, situado en el header
     Personal
 </div>
 
-<!-- Nav Item - Pages Collapse Menu -- Usuarios -->
+<!-- Nav Item - Collapse Menu -- Usuarios -->
 <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers"
        aria-expanded="true" aria-controls="collapseUsers">
@@ -20,7 +20,7 @@ Esta página contiene el menu principal del sitio, situado en el header
     <div id="collapseUsers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="/usuarios">Ver usuarios</a>
-            <a class="collapse-item" href="/usuarios/add">Añadir usuario</a>
+            <a class="collapse-item" href="/usuario/add">Añadir usuario</a>
         </div>
     </div>
 </li>
@@ -28,79 +28,98 @@ Esta página contiene el menu principal del sitio, situado en el header
 <hr class="sidebar-divider">
 
 <!-- Heading -->
-<div class="sidebar-heading">
-    Interface
+<div class="sidebar-heading text-success">
+    Inventario
 </div>
 
-<!-- Nav Item - Pages Collapse Menu -->
+<!-- Nav Item - Collapse Menu Familia -->
 <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-       aria-expanded="true" aria-controls="collapseTwo">
-        <i class="fas fa-fw fa-cog"></i>
-        <span>Components</span>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFamilies"
+       aria-expanded="true" aria-controls="collapseFamilies">
+        <i class="fas fa-fw fa-th"></i>
+        <span>Familias</span>
     </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div id="collapseFamilies" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Components:</h6>
-            <a class="collapse-item" href="buttons.html">Buttons</a>
-            <a class="collapse-item" href="cards.html">Cards</a>
+            <a class="collapse-item" href="/familias">Ver familias</a>
+            <a class="collapse-item" href="">Añadir Familia</a>
         </div>
     </div>
 </li>
 
-<!-- Nav Item - Utilities Collapse Menu -->
+<!-- Nav Item - Collapse Menu Categoría -->
 <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-       aria-expanded="true" aria-controls="collapseUtilities">
-        <i class="fas fa-fw fa-wrench"></i>
-        <span>Utilities</span>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
+       aria-expanded="true" aria-controls="collapseCategories">
+        <i class="fas fa-fw fa-th-large"></i>
+        <span>Categorías</span>
     </a>
-    <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+    <div id="collapseCategories" class="collapse" aria-labelledby="headingUtilities"
          data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item" href="utilities-color.html">Colors</a>
-            <a class="collapse-item" href="utilities-border.html">Borders</a>
-            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-            <a class="collapse-item" href="utilities-other.html">Other</a>
+            <a class="collapse-item" href="">Ver categorías</a>
+            <a class="collapse-item" href="">Añadir categoría</a>
         </div>
     </div>
 </li>
+
+<!-- Nav Item - Collapse Menu -- Piezas -->
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePieces"
+       aria-expanded="true" aria-controls="collapsePieces">
+        <i class="fas fa-fw fa-cog"></i>
+        <span>Piezas</span>
+    </a>
+    <div id="collapsePieces" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="">Ver Piezas</a>
+            <a class="collapse-item" href="">Añadir Pieza</a>
+        </div>
+    </div>
+</li>
+
 
 <!-- Divider -->
 <hr class="sidebar-divider">
 
 <!-- Heading -->
-<div class="sidebar-heading">
-    Addons
+<div class="sidebar-heading text-success">
+    Eventos
 </div>
 
-<!-- Nav Item - Pages Collapse Menu -->
+<!-- Nav Item - Collapse Menu -- Eventos -->
 <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-       aria-expanded="true" aria-controls="collapsePages">
-        <i class="fas fa-fw fa-folder"></i>
-        <span>Pages</span>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvents"
+       aria-expanded="true" aria-controls="collapseEvents">
+        <i class="fas fa-fw fa-calendar"></i>
+        <span>Eventos</span>
     </a>
-    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+    <div id="collapseEvents" class="collapse" aria-labelledby="headingUtilities"
+         data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="login.html">Login</a>
-            <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
+            <h6 class="collapse-header">Custom Utilities:</h6>
+            <a class="collapse-item" href="">Ver eventos</a>
+            <a class="collapse-item" href="">Añadir evento</a>
         </div>
     </div>
 </li>
 
-<!-- Nav Item - Tables -->
+<!-- Nav Item - Collapse Menu -- Clientes -->
 <li class="nav-item">
-    <a class="nav-link" href="tables.html">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Tables</span></a>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClients"
+       aria-expanded="true" aria-controls="collapseClients">
+        <i class="fas fa-fw fa-user"></i>
+        <span>Clientes</span>
+    </a>
+    <div id="collapseClients" class="collapse" aria-labelledby="headingUtilities"
+         data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Custom Utilities:</h6>
+            <a class="collapse-item" href="">Ver categorías</a>
+            <a class="collapse-item" href="">Añadir categoría</a>
+        </div>
+    </div>
 </li>
 
 <!-- Divider -->

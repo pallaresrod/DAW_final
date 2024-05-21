@@ -40,7 +40,7 @@
                     </tfoot>
                 </table>
                 <div class="col-12 text-right">
-                    <a href="/usuarios" class="btn btn-secondary ml-3">Salir</a>                            
+                    <a href="/" class="btn btn-secondary ml-3">Salir</a>                            
                 </div>
             </div>
         </div>

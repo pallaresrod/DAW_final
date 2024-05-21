@@ -38,6 +38,8 @@ class FrontController {
                     }
                     , 'get');
 
+            /* GESTIÓN DE USUSARIOS */
+
             //ruta hacia la págia de usuarios
             Route::add('/usuarios',
                     function () {
@@ -70,6 +72,21 @@ class FrontController {
                     }
                     , 'get');
 
+            //edición de perfil
+            Route::add('/editarPerfil/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->editarPefil((int) $id);
+                    }
+                    , 'get');
+
+            Route::add('/editarPerfil/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->procesarEditarPerfil((int) $id);
+                    }
+                    , 'post');
+
             //solo pueden los que tienen permiso de edición
             if (strpos($_SESSION['permisos'], 'w') !== false) {
 
@@ -89,17 +106,52 @@ class FrontController {
                         , 'post');
 
                 //añadir usuarios
-                Route::add('/usuarios/add',
+                Route::add('/usuario/add',
                         function () {
                             $controlador = new \Com\Daw2\Controllers\UsuarioController();
                             $controlador->mostrarAdd();
                         }
                         , 'get');
 
-                Route::add('/usuarios/add',
+                Route::add('/usuario/add',
                         function () {
                             $controlador = new \Com\Daw2\Controllers\UsuarioController();
                             $controlador->processAdd();
+                        }
+                        , 'post');
+
+                //borrar usuario
+                Route::add('/usuario/delete/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->processDelete((int) $id);
+                        }
+                        , 'get');
+            }
+
+            /* GESTIÓN DE FAMILIAS */
+
+            Route::add('/familias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                        $controlador->mostrarTodas();
+                    }
+                    , 'get');
+
+            if (strpos($_SESSION['permisos'], 'w') !== false) {
+
+                //añadir familia
+                Route::add('/familia/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->mostrarAdd();
+                        }
+                        , 'get');
+
+                Route::add('/familia/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->procesarAdd();
                         }
                         , 'post');
             }

@@ -138,45 +138,58 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
             return 0;
         }
     }
-
-    //NO PROYECTO, EJERCICIOS CLASE
-
-    function editUsuarioSistema(int $idUsuario, array $data): bool {
-        $query = "UPDATE usuario_sistema SET id_rol=:id_rol, email=:email, nombre=:nombre, id_idioma=:id_idioma WHERE id_usuario=:id_usuario";
-        $stmt = $this->pdo->prepare($query);
-        $vars = [
-            'id_rol' => $data['id_rol'],
-            'email' => $data['email'],
-            'nombre' => $data['nombre'],
-            'id_idioma' => $data['id_idioma'],
-            'id_usuario' => $idUsuario
-        ];
-        return $stmt->execute($vars);
-    }
-
-    function editPassword(int $idUsuario, string $pass): bool {
-        $query = "UPDATE usuario_sistema SET pass=? WHERE id_usuario=?";
-        $stmt = $this->pdo->prepare($query);
-        $encryptedPass = password_hash($pass, PASSWORD_DEFAULT);
-        return $stmt->execute([$encryptedPass, $idUsuario]);
-    }
-
+    
+    /**
+     * borra un usuario de la base de datos
+     * @param int $id el usuario que borramos
+     * @return bool devuelve true si se borró el ususario, false si no
+     */
     function delete(int $id): bool {
-        $query = "DELETE FROM usuario_sistema WHERE id_usuario = ?";
+        $query = "DELETE FROM usuario WHERE idUsuario = ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$id]);
         return $stmt->rowCount() > 0;
     }
-
-    function baja(int $id, int $estado): bool {
-        $query = "UPDATE usuario_sistema SET baja=? WHERE id_usuario = ?";
+    
+    /**
+     * edita los datos de un usuario
+     * @param int $idUsuario el usuario del que se actualiza la contraseña
+     * @param array $data los nuevos datos
+     * @return bool true si la operación se realizo con éxito, false si no
+     */
+    function editPerfil(int $idUsuario, array $data): bool {
+        $query = "UPDATE usuario SET nombre=:nombre, email=:email, login=:login WHERE idUsuario=:idUsuario";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$estado, $id]);
-        return $stmt->rowCount() > 0;
+        $vars = [
+            'email' => $data['email'],
+            'nombre' => $data['nombre'],
+            'login' => $data['login'],
+            'idUsuario' => $idUsuario
+        ];
+        return $stmt->execute($vars);
     }
 
+    /**
+     * actualiza la contraseña de un usuario
+     * @param int $idUsuario el usuario del que se actualiza la contraseña
+     * @param string $pass la nueva contraseña
+     * @return bool true si la operación se realizo con éxito, false si no
+     */
+    function editPassword(int $idUsuario, string $pass): bool {
+        $query = "UPDATE usuario SET pass=? WHERE idUsuario=?";
+        $stmt = $this->pdo->prepare($query);
+        $encryptedPass = password_hash($pass, PASSWORD_DEFAULT);
+        return $stmt->execute([$encryptedPass, $idUsuario]);
+    }
+    
+    /**
+     * busca un usuario con el email que pasamos de parámetro y que no tenga el id que pasamos de parámetro
+     * @param string $email el email que se busca
+     * @param int $id el idUsuario que no tiene que coincidir
+     * @return array|null devuelve la info en forma de array si encuentra un usuario, null si no encuentra
+     */
     function loadByEmailNotId(string $email, int $id): ?array {
-        $query = "SELECT * FROM usuario_sistema WHERE email = ? AND id_usuario != ?";
+        $query = "SELECT * FROM usuario WHERE email = ? AND idUsuario != ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$email, $id]);
         if ($row = $stmt->fetch()) {
@@ -185,11 +198,17 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-
-    function loadUsuarioSistema(int $id): ?array {
-        $query = "SELECT * FROM usuario_sistema WHERE id_usuario = ?";
+    
+    /**
+     * busca un usuario con el login que pasamos de parámetro y que no tenga el id que pasamos de parámetro
+     * @param string $login el login que se busca
+     * @param int $id el idUsuario que no tiene que coincidir
+     * @return array|null devuelve la info en forma de array si encuentra un usuario, null si no encuentra
+     */
+    function loadByLoginNotId(string $login, int $id): ?array {
+        $query = "SELECT * FROM usuario WHERE login = ? AND idUsuario != ?";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$id]);
+        $stmt->execute([$login, $id]);
         if ($row = $stmt->fetch()) {
             return $row;
         } else {

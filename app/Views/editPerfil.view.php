@@ -19,9 +19,7 @@
     ?>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos del nuevo usuario</h6>
-        </div>
+
         <div class="card-body">
             <div >
                 <div>
@@ -45,7 +43,7 @@
                                 <p class="text-danger"><?php echo isset($errores['login']) ? $errores['login'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control" name="idRol">
+                                <select class="form-control" name="idRol" disabled>
                                     <option value="">Rol</option>
                                     <?php
                                     foreach ($roles as $r) {
@@ -62,20 +60,19 @@
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <input type="password" class="form-control" id="pass1" name="pass1" 
-                                       placeholder="Contraseña">
+                                       placeholder="Contraseña (Sin modificar)">
                                 <p class="text-danger"><?php echo isset($errores['pass1']) ? $errores['pass1'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
                                 <input type="password" class="form-control" id="pass2" name="pass2" 
-                                       placeholder="Verifique la contraseña">
+                                       placeholder="Verifique la contraseña (Sin modificar)">
                                 <p class="text-danger"><?php echo isset($errores['pass2']) ? $errores['pass2'] : ''; ?></p>
                             </div>
                         </div>
-                        <div class="col-12 text-right">                            
+                        <div class="col-12 text-right">
+                            <input type="submit" value="Aceptar" name="enviar" class="btn btn-primary"/>
 
-                            <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
-
-                            <a href="/usuarios" class="btn btn-secondary ml-3">Cancelar</a>                            
+                            <a href="/usuarios" class="btn btn-secondary ml-3">Salir</a>                            
                         </div>
                     </form>
                 </div>

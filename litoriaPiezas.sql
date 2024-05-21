@@ -22,6 +22,7 @@ CREATE TABLE usuario (
     last_log datetime DEFAULT NULL
 );
 
+-- estructura activityLog
 CREATE TABLE activityLog (
 	idUsuario INT,
     log datetime
@@ -40,7 +41,6 @@ CREATE TABLE pieza (
 	nombreOficial VARCHAR(100) NOT NULL,
     cofigoMarca VARCHAR(20),
     denominacion VARCHAR(100),
-    foto VARCHAR(50),
     precio DECIMAL(7, 2),
     stock INT,
     stockActual INT DEFAULT NULL,
@@ -54,7 +54,6 @@ CREATE TABLE pieza (
 CREATE TABLE categoria (
 	idCategoria INT AUTO_INCREMENT PRIMARY KEY,
 	nombreCategoria VARCHAR(100),
-    logo VARCHAR(50),
     descripcion VARCHAR(255),
     idFamilia INT
 );
@@ -63,7 +62,6 @@ CREATE TABLE categoria (
 CREATE TABLE familia (
 	idFamilia INT AUTO_INCREMENT PRIMARY KEY,
 	nombreFamilia VARCHAR(100),
-    logo VARCHAR(50),
     descripcion VARCHAR(255)
 );
 
@@ -104,7 +102,7 @@ ALTER TABLE usuario ADD FOREIGN KEY (idRol) REFERENCES rol(idRol);
 -- creacion de una clave primaria compuesta para la tabla activityLog
 ALTER TABLE activityLog ADD PRIMARY KEY (idUsuario, log);
 -- creacion de clave foranea
-ALTER TABLE activityLog ADD FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario);
+ALTER TABLE activityLog ADD FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE CASCADE;
 
 ALTER TABLE pieza ADD FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria);
 
