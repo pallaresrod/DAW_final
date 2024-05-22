@@ -70,6 +70,9 @@
                             Total de registros: <?php echo count($familias); ?>
                         </tfoot>
                     </table>
+                    <div id="pagination" class="mt-3 text-center">
+                        <!-- Los controles de paginación son generados por JavaScript si es necesario-->
+                    </div>
                     <?php
                 } else {
                     ?>

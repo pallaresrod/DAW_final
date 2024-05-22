@@ -343,7 +343,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             }
         }
 
-        //si no hay errores se inserta el valor en la base de datos
+        //si no hay errores se edita el valor en la base de datos
         if (count($errores) == 0) {
             $model = new \Com\Daw2\Models\UsuariosModel();
             $update = $model->updateidRol($idUsuario, (int) $_POST['idRol']);
@@ -516,3 +516,4 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     }
 
 }
+?>

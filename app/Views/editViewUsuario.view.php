@@ -59,23 +59,19 @@
                         </div>
                         <div class="col-12 text-right">
                             <?php
-                            if (isset($readonly)) {
+                            if (isset($readonly) && $readonly && (strpos($_SESSION['permisos'], 'w') !== false)) {
                                 //solo se mostrará al estar en modo de ver usuario  y el usuario que quiere verlo es admin
-                                if ($readonly && (strpos($_SESSION['permisos'], 'w') !== false)) {
-                                    ?>                            
-                                    <a href="/actividad/<?php echo $input['idUsuario']; ?>" class="btn btn-primary ml-3">Ver actividad del usuario</a>  
-                                    <?php
-                                }
+                                ?>                            
+                                <a href="/actividad/<?php echo $input['idUsuario']; ?>" class="btn btn-primary ml-3">Ver actividad del usuario</a>  
+                                <?php
                             }
                             ?>
                             <?php
                             //solo se mostrará al estar en modo de edición de usuario
-                            if (isset($readonly)) {
-                                if (!$readonly) {
-                                    ?>                            
-                                    <input type="submit" value="Aceptar" name="enviar" class="btn btn-primary"/>
-                                    <?php
-                                }
+                            if (isset($readonly) && !$readonly) {
+                                ?>                            
+                                <input type="submit" value="Aceptar" name="enviar" class="btn btn-primary"/>
+                                <?php
                             }
                             ?>
                             <a href="/usuarios" class="btn btn-secondary ml-3">Salir</a>                            

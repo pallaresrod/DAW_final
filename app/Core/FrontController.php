@@ -87,7 +87,7 @@ class FrontController {
                     }
                     , 'post');
 
-            //solo pueden los que tienen permiso de edición
+            //acciones que solo pueden hacer los que tienen permiso de edición
             if (strpos($_SESSION['permisos'], 'w') !== false) {
 
                 //editar un usuario
@@ -138,6 +138,14 @@ class FrontController {
                     }
                     , 'get');
 
+            Route::add('/familia/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                        $controlador->mostrarFamilia((int) $id);
+                    }
+                    , 'get');
+
+            //acciones que solo pueden hacer los que tienen permiso de edición
             if (strpos($_SESSION['permisos'], 'w') !== false) {
 
                 //añadir familia
@@ -152,6 +160,88 @@ class FrontController {
                         function () {
                             $controlador = new \Com\Daw2\Controllers\FamiliasController();
                             $controlador->procesarAdd();
+                        }
+                        , 'post');
+
+                //borrar familia
+                Route::add('/familia/delete/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->processDelete((int) $id);
+                        }
+                        , 'get');
+
+                //editar familia
+                Route::add('/familia/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->mostrarEdit((int) $id);
+                        }
+                        , 'get');
+
+                Route::add('/familia/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->procesarEdit((int) $id);
+                        }
+                        , 'post');
+            }
+            
+            /* GESTIÓN DE CATEGORÍAS */
+
+            Route::add('/categorias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarTodas();
+                    }
+                    , 'get');
+
+                    //
+            Route::add('/familia/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                        $controlador->mostrarFamilia((int) $id);
+                    }
+                    , 'get');
+
+            //acciones que solo pueden hacer los que tienen permiso de edición
+            if (strpos($_SESSION['permisos'], 'w') !== false) {
+
+                //añadir familia
+                Route::add('/categoria/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->mostrarAdd();
+                        }
+                        , 'get');
+
+                Route::add('/categoria/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->procesarAdd();
+                        }
+                        , 'post');
+
+                //borrar familia
+                Route::add('/familia/delete/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->processDelete((int) $id);
+                        }
+                        , 'get');
+
+                //editar familia
+                Route::add('/familia/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->mostrarEdit((int) $id);
+                        }
+                        , 'get');
+
+                Route::add('/familia/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador->procesarEdit((int) $id);
                         }
                         , 'post');
             }

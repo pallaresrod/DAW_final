@@ -42,6 +42,9 @@
                 <div class="col-12 text-right">
                     <a href="/" class="btn btn-secondary ml-3">Salir</a>                            
                 </div>
+                <div id="pagination" class="mt-3 text-center">
+                    <!-- Los controles de paginación son generados por JavaScript si es necesario-->
+                </div>
             </div>
         </div>
     </div>

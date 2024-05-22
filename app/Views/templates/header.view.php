@@ -67,22 +67,22 @@ head y el principop del body: header y parte del main de cada página
                                 <li class="nav-item dropdown no-arrow">
                                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['usuario']['nombre']; ?></span>
+                                        <span class="mr-2  d-lg-inline text-gray-600 small"><?php echo $_SESSION['usuario']['nombre']; ?></span>
                                         <img class="img-profile rounded-circle"
                                              src="assets/img/perfiles/<?php echo (strpos($_SESSION['permisos'], 'w') !== false)? 'usuarioEditor.png' : 'usuarioLector.png' ?>">
                                     </a>
                                     <!-- Dropdown - User Information -->
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                          aria-labelledby="userDropdown">
-                                        <a class="dropdown-item" href="/usuario/view/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
+                                        <a class="dropdown-item" href="/usuario/view/<?php echo $_SESSION['usuario']['idUsuario']; ?>">
                                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Ver perfil
                                         </a>
-                                        <a class="dropdown-item" href="/editarPerfil/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
+                                        <a class="dropdown-item" href="/editarPerfil/<?php echo $_SESSION['usuario']['idUsuario']; ?>">
                                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Editar perfil
                                         </a>
-                                        <a class="dropdown-item" href="/actividad/<?php echo $_SESSION['usuario']['idUsuario'] ?>">
+                                        <a class="dropdown-item" href="/actividad/<?php echo $_SESSION['usuario']['idUsuario']; ?>" target="_blank">
                                             <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Log de actividad
                                         </a>

@@ -20,7 +20,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos del nuevo usuario</h6>
+            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos de la nueva familia</h6>
         </div>
         <div class="card-body">
             <div >
