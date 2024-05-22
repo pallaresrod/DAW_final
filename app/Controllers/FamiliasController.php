@@ -72,29 +72,34 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
      * @param array $data datos del formulario
      * @return array errores encontrados
      */
-    function checkForm(array $data): array {
+    private function checkForm(array $data): array {
         $errores = [];
 
-        if (empty($data['nombre'])) {
+        if (empty($data['nombreFamilia'])) {
             $errores['nombre'] = 'Inserte un nombre';
-        } else if (!preg_match('/^[a-zA-Z ]{1,255}$/', $data['nombre'])) {
+        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{1,255}$/', $data['nombreFamilia'])) {
             $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
         }
 
         if (empty($data['descripcion'])) {
             $errores['descripcion'] = 'Inserte una descripción';
-        } else if (!preg_match('/^[a-zA-Z0-9 ]{4,255}$/', $data['descripcion'])) {
+        } else if (!preg_match('/^[a-zA-Z0-9À-ÿ\u00f1\u00d1 ]{4,255}$/', $data['descripcion'])) {
             $errores['descripcion'] = 'La descripción debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
         }
 
         return $errores;
     }
 
-    function checkAddForm(array $data): array {
+    /**
+     * comprueba que el formulario para añadir una familia no tenga errores
+     * @param array $data los datos del formulario
+     * @return array los errores encontrados
+     */
+    private function checkAddForm(array $data): array {
         $errores = $this->checkForm($data);
         
         $model = new \Com\Daw2\Models\FamiliasModel();
-        $familia = $model->loadByName($data['nombre']);
+        $familia = $model->loadByName($data['nombreFamilia']);
         if (!is_null($familia)) {
             $errores['nombre'] = 'El nombre seleccionado ya está en uso';
         }
@@ -124,6 +129,10 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
         header('location: /familias');
     }
 
+    /**
+     * muestra la info de una familia
+     * @param int $idFamilia la familia de la que se muestra la info
+     */
     function mostrarFamilia(int $idFamilia) {
         $modelo = new \Com\Daw2\Models\FamiliasModel();
 
@@ -141,6 +150,10 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'editViewFamilia.view.php', 'templates/footer.view.php'), $data);
     }
 
+    /**
+     * muestra la pantalla de edición de una familia
+     * @param int $idFamilia la familia que se muestra
+     */
     function mostrarEdit(int $idFamilia) {
         $modelo = new \Com\Daw2\Models\FamiliasModel();
 
@@ -158,6 +171,10 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'editViewFamilia.view.php', 'templates/footer.view.php'), $data);
     }
 
+    /**
+     * procesa la petición de edición de una familia
+     * @param int $idFamilia la familia que se edita
+     */
     function procesarEdit(int $idFamilia) {
         $errores = $this->checkEditFrom($_POST, $idFamilia);
 
@@ -171,7 +188,7 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
                 header('location: /familias');
                 die;
             } else {
-                $errores['desconocido'] = 'Error desconocido. No se ha editado el usuario.';
+                $errores['desconocido'] = 'Error desconocido. No se ha editado la familia.';
             }
         }
 
@@ -187,11 +204,17 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'editViewFamilia.view.php', 'templates/footer.view.php'), $data);
     }
     
-    function checkEditFrom(array $data, int $idFamilia){
+    /**
+     * comprueba que el formulario de edicion no tenga errores
+     * @param array $data los datos del formulario
+     * @param int $idFamilia la familia que se edita
+     * @return string los errores encontrados
+     */
+    private function checkEditFrom(array $data, int $idFamilia){
         $errores = $this->checkForm($data);
         
         $model = new \Com\Daw2\Models\FamiliasModel();
-        $familia = $model->loadByNameNotId($data['nombre'], $idFamilia);
+        $familia = $model->loadByNameNotId($data['nombreFamilia'], $idFamilia);
         if (!is_null($familia)) {
             $errores['nombre'] = 'El nombre seleccionado ya está en uso';
         }

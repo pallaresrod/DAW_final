@@ -23,13 +23,13 @@
             <h6 class="m-0 font-weight-bold text-success">Introduzca los datos de la nueva categoría</h6>
         </div>
         <div class="card-body">
-            <div >
+            <div>
                 <div>
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="text" class="form-control " id="nombre" name="nombre"
-                                       value="<?php echo isset($input['nombre']) ? $input['nombre'] : ''; ?>" placeholder="Nombre de la categoría">
+                                <input type="text" class="form-control " id="nombreCategoria" name="nombreCategoria"
+                                       value="<?php echo isset($input['nombreCategoria']) ? $input['nombreCategoria'] : ''; ?>" placeholder="Nombre de la categoría">
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0 align-content-sm-end text-right p-3">      
                                 <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
-                                <a href="/familias" class="btn btn-secondary ml-3">Cancelar</a>                            
+                                <a href="/categorias" class="btn btn-secondary ml-3">Cancelar</a>                            
                             </div>
                         </div>
                     </form>

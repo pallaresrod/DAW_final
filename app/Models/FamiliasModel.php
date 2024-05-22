@@ -55,8 +55,8 @@ class FamiliasModel extends \Com\Daw2\Core\BaseModel {
         $query = "INSERT INTO familia (nombreFamilia, descripcion) VALUES(:nombreFamilia, :descripcion)";
         $stmt = $this->pdo->prepare($query);
         $vars = [
-            'nombreFamilia' => $data['nombre'],
-            'descripcion' => $data['descripcion']
+            'nombreFamilia' => $data['nombreFamilia'],
+            'descripcion' => trim($data['descripcion'])
         ];
         if ($stmt->execute($vars)) {
             return 1;
@@ -104,8 +104,8 @@ class FamiliasModel extends \Com\Daw2\Core\BaseModel {
         $query = "UPDATE familia SET nombreFamilia=:nombre, descripcion=:descripcion WHERE idFamilia=:idFamilia";
         $stmt = $this->pdo->prepare($query);
         $vars = [
-            'nombre' => $data['nombre'],
-            'descripcion' => $data['descripcion'],
+            'nombre' => $data['nombreFamilia'],
+            'descripcion' => trim($data['descripcion']),
             'idFamilia' => $idFamilia
         ];
         return $stmt->execute($vars);

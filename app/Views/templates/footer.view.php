@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 1; i <= numeroDePaginas; i++) {
             const boton = document.createElement('button'); // Crea un botón
             boton.innerText = i; // Establece el número de la página como texto del botón
-            boton.classList.add('btn', 'btn-primary', 'mx-1'); // Agrega clases al botón
+            boton.classList.add('btn', 'btn-success', 'mx-1'); // Agrega clases al botón
             boton.addEventListener('click', () => mostrarPagina(i)); // Agrega evento click al botón
             paginacion.appendChild(boton); // Añade el botón al contenedor de paginación
         }

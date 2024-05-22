@@ -28,8 +28,8 @@
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="text" class="form-control " id="nombre" name="nombre"
-                                       value="<?php echo isset($input['nombre']) ? $input['nombre'] : ''; ?>" placeholder="Nombre de la familia">
+                                <input type="text" class="form-control " id="nombreFamilia" name="nombreFamilia"
+                                       value="<?php echo isset($input['nombreFamilia']) ? $input['nombreFamilia'] : ''; ?>" placeholder="Nombre de la familia">
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>
                             </div>
                         </div>

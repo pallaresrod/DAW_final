@@ -186,7 +186,7 @@ class FrontController {
                         }
                         , 'post');
             }
-            
+
             /* GESTIÓN DE CATEGORÍAS */
 
             Route::add('/categorias',
@@ -196,18 +196,25 @@ class FrontController {
                     }
                     , 'get');
 
-                    //
-            Route::add('/familia/view/([0-9]+)',
+            Route::add('/categorias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarFiltros();
+                    }
+                    , 'post');
+
+            //ver categoria
+            Route::add('/categoria/view/([0-9]+)',
                     function ($id) {
-                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
-                        $controlador->mostrarFamilia((int) $id);
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarCategoria((int) $id);
                     }
                     , 'get');
 
             //acciones que solo pueden hacer los que tienen permiso de edición
             if (strpos($_SESSION['permisos'], 'w') !== false) {
 
-                //añadir familia
+                //añadir categoria
                 Route::add('/categoria/add',
                         function () {
                             $controlador = new \Com\Daw2\Controllers\CategoriasController();
@@ -222,25 +229,25 @@ class FrontController {
                         }
                         , 'post');
 
-                //borrar familia
-                Route::add('/familia/delete/([0-9]+)',
+                //borrar categoria
+                Route::add('/categoria/delete/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
                             $controlador->processDelete((int) $id);
                         }
                         , 'get');
 
-                //editar familia
-                Route::add('/familia/edit/([0-9]+)',
+                //editar categoria
+                Route::add('/categoria/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
                             $controlador->mostrarEdit((int) $id);
                         }
                         , 'get');
 
-                Route::add('/familia/edit/([0-9]+)',
+                Route::add('/categoria/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');
