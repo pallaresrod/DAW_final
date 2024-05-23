@@ -15,6 +15,11 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
                 . "FROM categoria c LEFT JOIN familia f ON c.idFamilia = f.idFamilia ORDER BY c.nombreCategoria")->fetchAll();
     }
     
+    /**
+     * selecciona las categorias que con el idFamilia que se pasa como parametro
+     * @param int $idFamilia la familia que se busca
+     * @return array las categorías que cumplen los requisitos
+     */
     function getFiltros(int $idFamilia): array {
         $query = "SELECT c.idCategoria, c.nombreCategoria, c.descripcion, f.nombreFamilia, f.idFamilia "
                 . "FROM categoria c LEFT JOIN familia f ON c.idFamilia = f.idFamilia WHERE c.idFamilia = ? ORDER BY c.nombreCategoria";

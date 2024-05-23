@@ -39,7 +39,7 @@
                                 <textarea class="form-control" id="descripcion" name="descripcion" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>>
                                     <?php echo isset($input['descripcion']) ? $input['descripcion'] : ''; ?>
                                 </textarea>
-                                <p class="text-danger"><?php echo isset($errores['descripcion']) ? $errores['descripcion'] : ''; ?></p>
+                                <p class="text-danger"><?php echo isset($errores['descripcion']) ? trim($errores['descripcion']) : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0 align-content-sm-end text-right p-3">
                                 <?php

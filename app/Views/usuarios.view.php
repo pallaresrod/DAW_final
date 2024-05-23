@@ -66,12 +66,12 @@
                                     <td><?php echo $u['nombreRol']; ?></td>      
                                     <td><?php echo (isset($u['last_log'])) ? $u['last_log'] : '-'; ?></td>     
                                     <td>                              
-                                        <a class="btn btn-success ml-1" href="/usuario/view/<?php echo $u['idUsuario']; ?>"><i class="fas fa-eye text-white"></i></a>
+                                        <a class="btn btn-success ml-1 mt-1 mb-1" href="/usuario/view/<?php echo $u['idUsuario']; ?>"><i class="fas fa-eye text-white"></i></a>
                                         <?php
                                         if (strpos($_SESSION['permisos'], 'w') !== false) {
                                             ?>
-                                            <a class="btn btn-dark ml-1" href="/usuario/edit/<?php echo $u['idUsuario']; ?>"><i class="fas fa-edit text-white"></i></a>
-                                            <a class="btn btn-danger ml-1" href="/usuario/delete/<?php echo $u['idUsuario']; ?>"><i class="fas fa-trash text-white"></i></a>
+                                            <a class="btn btn-dark ml-1 mt-1 mb-1" href="/usuario/edit/<?php echo $u['idUsuario']; ?>"><i class="fas fa-edit text-white"></i></a>
+                                            <a class="btn btn-danger ml-1 mt-1 mb-1" href="/usuario/delete/<?php echo $u['idUsuario']; ?>"><i class="fas fa-trash text-white"></i></a>
                                             <?php
                                         }
                                         ?>

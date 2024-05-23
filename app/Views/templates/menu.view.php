@@ -116,8 +116,8 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
         </a>
         <div id="collapsePieces" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">Ver Piezas</a>
-                <a class="collapse-item" href="">Añadir Pieza</a>
+                <a class="collapse-item" href="/piezas">Ver Piezas</a>
+                <a class="collapse-item" href="/pieza/add">Añadir Pieza</a>
             </div>
         </div>
     </li>
@@ -125,7 +125,7 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
 } else {
     ?>
     <li class="nav-item">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="/piezas">
             <i class="fas fa-fw fa-cog"></i>
             <span>Piezas</span></a>
     </li>

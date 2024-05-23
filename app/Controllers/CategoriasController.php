@@ -27,11 +27,9 @@ class CategoriasController extends \Com\Daw2\Core\BaseController {
     }
 
     /**
-     * muestra un listado dependiendo del filtro de familia
+     * muestra un listado dependiendo del filtro de familia seleccionada
      */
     function mostrarFiltros() {
-        
-        //echo 'hola'; die;
 
         if (empty($_POST['idFamilia'])) {
             header('location: /categorias');
@@ -43,6 +41,7 @@ class CategoriasController extends \Com\Daw2\Core\BaseController {
             $data['titulo'] = 'Categorias';
             $data['categorias'] = $modelo->getFiltros((int) $_POST['idFamilia']);
             $data['familias'] = $modelofami->getAll();
+            $data['input'] = filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             if (isset($_SESSION['mensaje'])) {
                 $data['mensaje'] = $_SESSION['mensaje'];
@@ -240,6 +239,10 @@ class CategoriasController extends \Com\Daw2\Core\BaseController {
         return $errores;
     }
 
+    /**
+     * procesa la petición de borrar una categoría
+     * @param int $idCategoria la categoría que se quiere borrar
+     */
     function processDelete(int $idCategoria) {
         $model = new \Com\Daw2\Models\CategoriasModel();
 

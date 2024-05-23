@@ -37,22 +37,21 @@ class FrontController {
                         $controlador->index();
                     }
                     , 'get');
-
-            /* GESTIÓN DE USUSARIOS */
-
-            //ruta hacia la págia de usuarios
-            Route::add('/usuarios',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
-                        $controlador->mostrarTodos();
-                    }
-                    , 'get');
-
+                   
             //cerrar sesión
             Route::add('/session/borrar',
                     function () {
                         $controlador = new \Com\Daw2\Controllers\UsuarioController();
                         $controlador->procesarLogOut();
+                    }
+                    , 'get');
+
+            /* GESTIÓN DE USUSARIOS */
+
+            Route::add('/usuarios',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                        $controlador->mostrarTodos();
                     }
                     , 'get');
 
@@ -87,9 +86,76 @@ class FrontController {
                     }
                     , 'post');
 
+            /* GESTIÓN DE FAMILIAS */
+
+            Route::add('/familias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                        $controlador->mostrarTodas();
+                    }
+                    , 'get');
+
+            Route::add('/familia/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
+                        $controlador->mostrarFamilia((int) $id);
+                    }
+                    , 'get');
+
+            /* GESTIÓN DE CATEGORÍAS */
+
+            Route::add('/categorias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarTodas();
+                    }
+                    , 'get');
+
+            //ver categorias con filtros
+            Route::add('/categorias',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarFiltros();
+                    }
+                    , 'post');
+
+            //ver categoria
+            Route::add('/categoria/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                        $controlador->mostrarCategoria((int) $id);
+                    }
+                    , 'get');
+            
+            /* GESTIÓN DE PIEZAS */
+
+            Route::add('/piezas',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\PiezasController();
+                        $controlador->mostrarTodas();
+                    }
+                    , 'get');
+
+            Route::add('/piezas',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\PiezasController();
+                        $controlador->mostrarFiltros();
+                    }
+                    , 'post');
+
+            //ver pieza
+            Route::add('/pieza/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\PiezasController();
+                        $controlador->mostrarPieza((int) $id);
+                    }
+                    , 'get');
+
             //acciones que solo pueden hacer los que tienen permiso de edición
             if (strpos($_SESSION['permisos'], 'w') !== false) {
-
+                
+                //USUARIOS
+                
                 //editar un usuario
                 Route::add('/usuario/edit/([0-9]+)',
                         function ($id) {
@@ -127,27 +193,9 @@ class FrontController {
                             $controlador->processDelete((int) $id);
                         }
                         , 'get');
-            }
-
-            /* GESTIÓN DE FAMILIAS */
-
-            Route::add('/familias',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
-                        $controlador->mostrarTodas();
-                    }
-                    , 'get');
-
-            Route::add('/familia/view/([0-9]+)',
-                    function ($id) {
-                        $controlador = new \Com\Daw2\Controllers\FamiliasController();
-                        $controlador->mostrarFamilia((int) $id);
-                    }
-                    , 'get');
-
-            //acciones que solo pueden hacer los que tienen permiso de edición
-            if (strpos($_SESSION['permisos'], 'w') !== false) {
-
+                        
+                //FAMILIAS
+                
                 //añadir familia
                 Route::add('/familia/add',
                         function () {
@@ -185,34 +233,8 @@ class FrontController {
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');
-            }
-
-            /* GESTIÓN DE CATEGORÍAS */
-
-            Route::add('/categorias',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
-                        $controlador->mostrarTodas();
-                    }
-                    , 'get');
-
-            Route::add('/categorias',
-                    function () {
-                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
-                        $controlador->mostrarFiltros();
-                    }
-                    , 'post');
-
-            //ver categoria
-            Route::add('/categoria/view/([0-9]+)',
-                    function ($id) {
-                        $controlador = new \Com\Daw2\Controllers\CategoriasController();
-                        $controlador->mostrarCategoria((int) $id);
-                    }
-                    , 'get');
-
-            //acciones que solo pueden hacer los que tienen permiso de edición
-            if (strpos($_SESSION['permisos'], 'w') !== false) {
+                        
+                //CATEGORÍAS
 
                 //añadir categoria
                 Route::add('/categoria/add',
@@ -248,6 +270,46 @@ class FrontController {
                 Route::add('/categoria/edit/([0-9]+)',
                         function ($id) {
                             $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->procesarEdit((int) $id);
+                        }
+                        , 'post');
+                        
+                //PIEZAS
+
+                //añadir pieza
+                Route::add('/pieza/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->mostrarAdd();
+                        }
+                        , 'get');
+
+                Route::add('/pieza/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->procesarAdd();
+                        }
+                        , 'post');
+
+                //borrar pieza
+                Route::add('/pieza/delete/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\CategoriasController();
+                            $controlador->processDelete((int) $id);
+                        }
+                        , 'get');
+
+                //editar pieza
+                Route::add('/pieza/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\PiezasController();
+                            $controlador->mostrarEdit((int) $id);
+                        }
+                        , 'get');
+
+                Route::add('/pieza/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\PiezasController();
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');
