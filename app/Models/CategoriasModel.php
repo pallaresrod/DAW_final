@@ -12,9 +12,9 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
      */
     function getAll(): array {
         return $this->pdo->query("SELECT c.idCategoria, c.nombreCategoria, c.descripcion, f.nombreFamilia, f.idFamilia "
-                . "FROM categoria c LEFT JOIN familia f ON c.idFamilia = f.idFamilia ORDER BY c.nombreCategoria")->fetchAll();
+                        . "FROM categoria c LEFT JOIN familia f ON c.idFamilia = f.idFamilia ORDER BY c.nombreCategoria")->fetchAll();
     }
-    
+
     /**
      * selecciona las categorias que con el idFamilia que se pasa como parametro
      * @param int $idFamilia la familia que se busca
@@ -25,10 +25,9 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
                 . "FROM categoria c LEFT JOIN familia f ON c.idFamilia = f.idFamilia WHERE c.idFamilia = ? ORDER BY c.nombreCategoria";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$idFamilia]);
-        
+
         return $stmt->fetchAll();
     }
-
 
     /**
      * busca una categoria con el nombre pasado como parametro
@@ -45,7 +44,7 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * busca una categoria con el id pasado como parametro
      * @param int $idCategoria el id que se busca
@@ -61,14 +60,14 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * inserta una nueva categoria a la base de datos
      * @param array $data los datos de la categoria
      * @return int devuelve 1 si se hace correctamente, 0 si no
      */
     function insertCategoria(array $data): int {
-        $query = "INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES(:nombreCategoria, :descripcion, :idFamilia)";
+        $query = "INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES (:nombreCategoria, :descripcion, :idFamilia)";
         $stmt = $this->pdo->prepare($query);
         $vars = [
             'nombreCategoria' => $data['nombreCategoria'],
@@ -81,7 +80,7 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
             return 0;
         }
     }
-    
+
     /**
      * busca una categoria con el nombre que se pasa como parametro pero no con el id
      * @param string $nombre el nombre que se busca
@@ -98,7 +97,7 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * actualiza una categoria
      * @param int $idCategoria la categoria que se actualiza
@@ -116,18 +115,19 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
         ];
         return $stmt->execute($vars);
     }
-    
+
     /**
      * borrar una categoria
      * @param int $id la categoria ha borrar
      * @return bool true si la borra sin problema, false si no
      */
     function delete(int $id): bool {
-        $query = "DELETE FROM categoria WHERE idCategoria= ?";
+        $query = "DELETE FROM categoria WHERE idCategoria = ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$id]);
         return $stmt->rowCount() > 0;
     }
-   
+
 }
- ?>
+
+?>

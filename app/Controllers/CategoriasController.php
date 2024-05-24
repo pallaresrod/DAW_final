@@ -246,16 +246,24 @@ class CategoriasController extends \Com\Daw2\Core\BaseController {
     function processDelete(int $idCategoria) {
         $model = new \Com\Daw2\Models\CategoriasModel();
 
-        if (!$model->delete($idCategoria)) {
-            $mensaje = [];
-            $mensaje['class'] = 'danger';
-            $mensaje['texto'] = 'No se ha podido borrar la categoría.';
+        //primeros comprobamos que la categoria no este referenciando a ninguna pieza, porque si lo esta no se puede borrar
+        $modelPieza = new \Com\Daw2\Models\PiezasModel();
+
+        if (!$modelPieza->buscarCat($idCategoria)) {
+            if (!$model->delete($idCategoria)) {
+                $mensaje = [];
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'No se ha podido borrar la categoría.';
+            } else {
+                $mensaje = [];
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'Categoría eliminada con éxito.';
+            }
         } else {
             $mensaje = [];
-            $mensaje['class'] = 'success';
-            $mensaje['texto'] = 'Categoría eliminada con éxito.';
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se ha podido borrar la categoría, pues contiene piezas dentro.';
         }
-
 
         $_SESSION['mensaje'] = $mensaje;
         header('location: /categorias');

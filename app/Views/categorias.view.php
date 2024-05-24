@@ -107,7 +107,7 @@
                     <?php
                 } else {
                     ?>
-                    <p class="text-danger">No existen registros que cumplan los requisitos.</p>
+                    <p class="text-danger">No existen registros.</p>
                     <?php
                 }
                 ?>

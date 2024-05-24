@@ -20,7 +20,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Pieza</h6>
+            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos de la nueva pieza</h6>
         </div>
         <div class="card-body">
             <div >
@@ -28,56 +28,48 @@
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="codigoPieza">Código pieza:</label>
-                                <input type="text" class="form-control " id="codigoPieza" name="codigoPieza" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
+                                <input type="text" class="form-control " id="codigoPieza" name="codigoPieza"
                                        value="<?php echo isset($input['codigoPieza']) ? $input['codigoPieza'] : ''; ?>" placeholder="Código pieza">
                                 <p class="text-danger"><?php echo isset($errores['codigoPieza']) ? $errores['codigoPieza'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="nombreOficial">Nombre Ofical:</label>
-                                <input type="text" class="form-control " id="nombreOficial" name="nombreOficial" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
+                                <input type="text" class="form-control " id="nombreOficial" name="nombreOficial"
                                        value="<?php echo isset($input['nombreOficial']) ? $input['nombreOficial'] : ''; ?>" placeholder="Nombre oficial">
                                 <p class="text-danger"><?php echo isset($errores['nombreOficial']) ? $errores['nombreOficial'] : ''; ?></p>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="codigoMarca">Código marca:</label>
-                                <input type="text" class="form-control " id="codigoMarca" name="codigoMarca" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
+                                <input type="text" class="form-control " id="codigoMarca" name="codigoMarca"
                                        value="<?php echo isset($input['codigoMarca']) ? $input['codigoMarca'] : ''; ?>" placeholder="Código marca">
                                 <p class="text-danger"><?php echo isset($errores['codigoMarca']) ? $errores['codigoMarca'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="precio">Precio:</label>
-                                <input type="number" step="0.01" class="form-control " id="precio" name="precio" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
+                                <input type="number" step="0.01" class="form-control " id="precio" name="precio"
                                        value="<?php echo isset($input['precio']) ? $input['precio'] : ''; ?>" placeholder="Precio">
                                 <p class="text-danger"><?php echo isset($errores['precio']) ? $errores['precio'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="stock">Stock:</label>
-                                <input type="number" class="form-control " id="stock" name="stock" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
+                                <input type="number" class="form-control " id="stock" name="stock"
                                        value="<?php echo isset($input['stock']) ? $input['stock'] : ''; ?>" placeholder="Stock">
                                 <p class="text-danger"><?php echo isset($errores['stock']) ? $errores['stock'] : ''; ?></p>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="longitud">Longitud:</label>
-                                <input type="text" class="form-control " id="longitud" name="longitud" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
-                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud">
+                                <input type="text" class="form-control " id="longitud" name="longitud"
+                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud. Ej:45.6cm">
                                 <p class="text-danger"><?php echo isset($errores['longitud']) ? $errores['longitud'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label for="peso">Peso:</label>
-                                <input type="text" class="form-control " id="peso" name="peso" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
-                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso">
+                                <input type="text" class="form-control " id="peso" name="peso"
+                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso. Ej:1.3kg">
                                 <p class="text-danger"><?php echo isset($errores['peso']) ? $errores['peso'] : ''; ?></p>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="idCategoria">Categoría:</label>
-                                <select class="form-control" name="idCategoria" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
+                                <select class="form-control" name="idCategoria">
                                     <option value="">Categoria</option>
                                     <?php
                                     foreach ($categorias as $c) {
@@ -90,42 +82,17 @@
                                 </select>
                                 <p class="text-danger"><?php echo isset($errores['idCategoria']) ? $errores['idCategoria'] : ''; ?></p>
                             </div>
-                            <?php
-                            if ($readonly) {
-                                ?>
-                                <div class="col-sm-6">
-                                    <label for="idFamilia">Familia:</label>
-                                    <select class="form-control" name="idFamilia" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
-                                        <option value="">Familia</option>
-                                        <?php
-                                        foreach ($familias as $f) {
-                                            ?>
-                                            <option value="<?php echo $f['idFamilia'] ?>" <?php echo (isset($input['idFamilia']) && $input['idFamilia'] == $f['idFamilia']) ? 'selected' : ''; ?>>
-                                                <?php echo ucfirst($f['nombreFamilia']) ?></option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
-                                    <p class="text-danger"><?php echo isset($errores['idFamilia']) ? $errores['idFamilia'] : ''; ?></p>
-                                </div>
-                                <?php
-                            }
-                            ?>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <label for="observaciones">Observaciones:</label>
-                                <textarea class="form-control" id="observaciones" name="observaciones" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>>
+                                <textarea class="form-control" id="observaciones" name="observaciones">
                                     <?php echo isset($input['observaciones']) ? trim($input['observaciones']) : ''; ?>
                                 </textarea>
                                 <p class="text-danger"><?php echo isset($errores['observaciones']) ? $errores['observaciones'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0 align-content-sm-end text-right p-3">      
-                                <?php
-                                if (!$readonly) {
-                                    ?>
-                                    <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
-                                <?php } ?>
+                                <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
                                 <a href="/piezas" class="btn btn-secondary ml-3">Cancelar</a>                            
                             </div>
                         </div>

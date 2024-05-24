@@ -144,6 +144,36 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
 <?php
 if (strpos($_SESSION['permisos'], 'w') !== false) {
     ?>
+    <!-- Nav Item - Collapse Menu -- Clientes -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClients"
+           aria-expanded="true" aria-controls="collapseClients">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Clientes</span>
+        </a>
+        <div id="collapseClients" class="collapse" aria-labelledby="headingUtilities"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/clientes">Ver clientes</a>
+                <a class="collapse-item" href="/cliente/add">Añadir cliente</a>
+            </div>
+        </div>
+    </li>
+    <?php
+} else {
+    ?>
+    <li class="nav-item">
+        <a class="nav-link" href="/">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Clientes</span></a>
+    </li>
+    <?php
+}
+?>
+
+<?php
+if (strpos($_SESSION['permisos'], 'w') !== false) {
+    ?>
     <!-- Nav Item - Collapse Menu -- Eventos -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvents"
@@ -166,36 +196,6 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
         <a class="nav-link" href="/">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Eventos</span></a>
-    </li>
-    <?php
-}
-?>
-
-<?php
-if (strpos($_SESSION['permisos'], 'w') !== false) {
-    ?>
-    <!-- Nav Item - Collapse Menu -- Clientes -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClients"
-           aria-expanded="true" aria-controls="collapseClients">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Clientes</span>
-        </a>
-        <div id="collapseClients" class="collapse" aria-labelledby="headingUtilities"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">Ver categorías</a>
-                <a class="collapse-item" href="">Añadir categoría</a>
-            </div>
-        </div>
-    </li>
-    <?php
-} else {
-    ?>
-    <li class="nav-item">
-        <a class="nav-link" href="/">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Clientes</span></a>
     </li>
     <?php
 }

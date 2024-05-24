@@ -144,6 +144,100 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewPieza.view.php', 'templates/footer.view.php'), $data);
     }
+    
+    /**
+     * muestra el formulario para añadir una pieza
+     */
+    function mostrarAdd() {
+        $modelocat = new \Com\Daw2\Models\CategoriasModel();
+        $categorias = $modelocat->getAll();
+
+        $data = array(
+            'titulo' => 'Añadir pieza',
+            'categorias' => $categorias
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'addPieza.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    /**
+     * procesa la petición de añadir una pieza
+     */
+    function procesarAdd(){
+        //comprueba errores
+        $errores = $this->checkAddForm($_POST);
+
+        //si no hay errores se inserta el valor en la base de datos
+        if (count($errores) == 0) {
+            $model = new \Com\Daw2\Models\PiezasModel();
+            $insert = $model->insertPieza($_POST);
+
+            //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+            if ($insert > 0) {
+                header('location: /piezas');
+                die;
+            } else {
+                $errores['desconocido'] = 'Error desconocido. No se ha insertado la pieza.';
+            }
+        }
+
+        $modelocat = new \Com\Daw2\Models\CategoriasModel();
+        $categorias = $modelocat->getAll();
+
+        $data = array(
+            'titulo' => 'Añadir pieza',
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'categorias' => $categorias,
+            'errores' => $errores
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'addPieza.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    /**
+     * procesa la petición de borrar una pieza
+     * @param int $idPieza la pieza que se quiere borrar
+     */
+    function processDelete(int $idPieza) {
+        $model = new \Com\Daw2\Models\PiezasModel();
+
+        if (!$model->delete($idPieza)) {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se ha podido borrar la pieza.';
+        } else {
+            $mensaje = [];
+            $mensaje['class'] = 'success';
+            $mensaje['texto'] = 'Pieza eliminada con éxito.';
+        }
+
+
+        $_SESSION['mensaje'] = $mensaje;
+        header('location: /piezas');
+    }
+    
+    /**
+     * comprueba que el formulario de añadir pieza este correcto
+     * @param type $data los datos del formulario
+     * @return array los errores encontrados
+     */
+    private function checkAddForm($data) : array {
+        $errores = $this->checkForm($data);
+        
+        $model = new \Com\Daw2\Models\PiezasModel();
+        
+        $piezaNombre = $model->loadByNombreOficial($data['nombreOficial']);
+        if (!is_null($piezaNombre)) {
+            $errores['nombreOficial'] = 'El nombre seleccionado ya está en uso';
+        }
+
+        $piezaCodigo = $model->loadByCodigoPieza($data['codigoPieza']);
+        if (!is_null($piezaCodigo)) {
+            $errores['codigoPieza'] = 'El nombre seleccionado ya está en uso';
+        }
+        
+        return $errores;
+    }
 
     /**
      * comprueba que el formulario de edicion este correcto
@@ -221,7 +315,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         if (empty($data['observaciones'])) {
             $errores['observaciones'] = 'Inserte observaciones';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]{4,255}$/', $data['observaciones'])) {
+        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{4,255}$/', $data['observaciones'])) {
             $errores['observaciones'] = 'El texto de observaciones debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
         }
 

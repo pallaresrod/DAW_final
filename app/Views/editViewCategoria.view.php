@@ -20,7 +20,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos de la nueva categoría</h6>
+            <h6 class="m-0 font-weight-bold text-success">Categoría</h6>
         </div>
         <div class="card-body">
             <div >
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0 align-content-sm-end text-right p-3">      
                                 <?php
-                                if (isset($readonly) && !$readonly) {
+                                if (!$readonly) {
                                     ?>
                                     <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
                                 <?php } ?>
