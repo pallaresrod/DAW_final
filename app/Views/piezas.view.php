@@ -33,7 +33,7 @@
             <form class="user" method="post">
                 <div class="form-group row">
                     <div class="col-sm-6">
-                        <select class="form-control" name="idCategoria">
+                        <select class="form-control select2" name="idCategoria">
                             <option value="">Todas las categorias</option>
                             <?php
                             foreach ($categorias as $c) {
@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6">
-                        <select class="form-control" name="idFamilia">
+                        <select class="form-control select2" name="idFamilia">
                             <option value="">Todas las familias</option>
                             <?php
                             foreach ($familias as $f) {

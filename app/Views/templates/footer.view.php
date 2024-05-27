@@ -54,44 +54,44 @@ el funcionamiento de la app
 
 <script>
 // JavaScript para la paginación
-document.addEventListener('DOMContentLoaded', function() {
-    const filasPorPagina = 10; // Número de filas a mostrar por página
-    const tabla = document.querySelector('#dataTable tbody'); // Selecciona el cuerpo de la tabla
-    const filas = Array.from(tabla.rows); // Convierte las filas de la tabla en un array
-    const totalFilas = filas.length; // Cuenta total de filas
-    const numeroDePaginas = Math.ceil(totalFilas / filasPorPagina); // Calcula el número de páginas
-    const paginacion = document.getElementById('pagination'); // Selecciona el contenedor de paginación
+    document.addEventListener('DOMContentLoaded', function () {
+        const filasPorPagina = 10; // Número de filas a mostrar por página
+        const tabla = document.querySelector('#dataTable tbody'); // Selecciona el cuerpo de la tabla
+        const filas = Array.from(tabla.rows); // Convierte las filas de la tabla en un array
+        const totalFilas = filas.length; // Cuenta total de filas
+        const numeroDePaginas = Math.ceil(totalFilas / filasPorPagina); // Calcula el número de páginas
+        const paginacion = document.getElementById('pagination'); // Selecciona el contenedor de paginación
 
-    // Función para mostrar la página seleccionada
-    function mostrarPagina(pagina) {
-        const inicio = (pagina - 1) * filasPorPagina; // Calcula la fila inicial
-        const fin = inicio + filasPorPagina; // Calcula la fila final
+        // Función para mostrar la página seleccionada
+        function mostrarPagina(pagina) {
+            const inicio = (pagina - 1) * filasPorPagina; // Calcula la fila inicial
+            const fin = inicio + filasPorPagina; // Calcula la fila final
 
-        // Muestra u oculta las filas según la página seleccionada
-        filas.forEach((fila, indice) => {
-            fila.style.display = (indice >= inicio && indice < fin) ? '' : 'none';
-        });
-    }
-
-    // Función para crear los controles de paginación
-    function crearControlesDePaginacion() {
-        for (let i = 1; i <= numeroDePaginas; i++) {
-            const boton = document.createElement('button'); // Crea un botón
-            boton.innerText = i; // Establece el número de la página como texto del botón
-            boton.classList.add('btn', 'btn-success', 'mx-1'); // Agrega clases al botón
-            boton.addEventListener('click', () => mostrarPagina(i)); // Agrega evento click al botón
-            paginacion.appendChild(boton); // Añade el botón al contenedor de paginación
+            // Muestra u oculta las filas según la página seleccionada
+            filas.forEach((fila, indice) => {
+                fila.style.display = (indice >= inicio && indice < fin) ? '' : 'none';
+            });
         }
-    }
 
-    // Si hay más de una página, crea los controles de paginación
-    if (numeroDePaginas > 1) {
-        crearControlesDePaginacion();
-    }
+        // Función para crear los controles de paginación
+        function crearControlesDePaginacion() {
+            for (let i = 1; i <= numeroDePaginas; i++) {
+                const boton = document.createElement('button'); // Crea un botón
+                boton.innerText = i; // Establece el número de la página como texto del botón
+                boton.classList.add('btn', 'btn-success', 'mx-1'); // Agrega clases al botón
+                boton.addEventListener('click', () => mostrarPagina(i)); // Agrega evento click al botón
+                paginacion.appendChild(boton); // Añade el botón al contenedor de paginación
+            }
+        }
 
-    // Muestra la primera página inicialmente
-    mostrarPagina(1);
-});
+        // Si hay más de una página, crea los controles de paginación
+        if (numeroDePaginas > 1) {
+            crearControlesDePaginacion();
+        }
+
+        // Muestra la primera página inicialmente
+        mostrarPagina(1);
+    });
 </script>
 
 <!-- Bootstrap core JavaScript-->
@@ -103,7 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Custom scripts for all pages-->
 <script src="assets/js/sb-admin-2.min.js"></script>
-    
+
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script>
+
 </body>
 
 </html>

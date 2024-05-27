@@ -33,7 +33,7 @@
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control" name="idFamilia">
+                                <select class="form-control select2" name="idFamilia">
                                     <option value="">Familia</option>
                                     <?php
                                     foreach ($familias as $f) {

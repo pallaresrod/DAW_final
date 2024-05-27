@@ -77,7 +77,7 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="idCategoria">Categoría:</label>
-                                <select class="form-control" name="idCategoria" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
+                                <select class="form-control select2" name="idCategoria" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
                                     <option value="">Categoria</option>
                                     <?php
                                     foreach ($categorias as $c) {

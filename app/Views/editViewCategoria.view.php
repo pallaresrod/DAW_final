@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="idFamilia">Familia:</label>
-                                <select class="form-control" name="idFamilia" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
+                                <select class="form-control select2" name="idFamilia" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
                                     <option value="">Familia</option>
                                     <?php
                                     foreach ($familias as $f) {

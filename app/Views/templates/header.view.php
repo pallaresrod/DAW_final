@@ -12,6 +12,9 @@ head y el principop del body: header y parte del main de cada página
         <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
         <title>Litoria</title>
 
+        <!-- Select2 -->
+        <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -20,7 +23,7 @@ head y el principop del body: header y parte del main de cada página
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <!-- Tempusdominus Bootstrap 4 -->
-        
+
         <!-- Theme style -->
         <link rel="stylesheet" href="assets/css/sb-admin-2.css">
     </head>
@@ -69,7 +72,7 @@ head y el principop del body: header y parte del main de cada página
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="mr-2  d-lg-inline text-gray-600 small"><?php echo $_SESSION['usuario']['nombre']; ?></span>
                                         <img class="img-profile rounded-circle"
-                                             src="assets/img/perfiles/<?php echo (strpos($_SESSION['permisos'], 'w') !== false)? 'usuarioEditor.png' : 'usuarioLector.png' ?>">
+                                             src="assets/img/perfiles/<?php echo (strpos($_SESSION['permisos'], 'w') !== false) ? 'usuarioEditor.png' : 'usuarioLector.png' ?>">
                                     </a>
                                     <!-- Dropdown - User Information -->
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

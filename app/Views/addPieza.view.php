@@ -69,7 +69,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <select class="form-control" name="idCategoria">
+                                <select class="form-control select2" name="idCategoria">
                                     <option value="">Categoria</option>
                                     <?php
                                     foreach ($categorias as $c) {

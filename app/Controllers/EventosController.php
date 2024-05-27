@@ -24,5 +24,17 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'eventos.view.php', 'templates/footer.view.php'), $data);
     }
     
+    function mostrarAdd(){
+        $clientesModel = new \Com\Daw2\Models\ClientesModel();
+        $clientes = $clientesModel->getAll();
+
+        $data = array(
+            'titulo' => 'Añadir categoria',
+            'familias' => $familias
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'addCategoria.view.php', 'templates/footer.view.php'), $data);
+    }
+    
 }
 ?>
