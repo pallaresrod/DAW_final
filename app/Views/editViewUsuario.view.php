@@ -28,11 +28,13 @@
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
+                                <label for="nombre">Nombre:</label>
                                 <input type="text" class="form-control " id="nombre" name="nombre"
                                        value="<?php echo isset($input['nombre']) ? $input['nombre'] : ''; ?>" placeholder="Nombre completo"
                                        readonly>
                             </div>
                             <div class="col-sm-6">
+                                <label for="email">Email:</label>
                                 <input type="email" class="form-control" id="email" name="email"
                                        value="<?php echo isset($input['email']) ? $input['email'] : ''; ?>" placeholder="Email"
                                        readonly>
@@ -40,11 +42,13 @@
                         </div>
                         <div class="form-group row align-items-center">
                             <div class="col-sm-6 mb-3 mb-sm-0">
+                                <label for="login">Nombre de usuario:</label>
                                 <input type="text" class="form-control" id="login" name="login"
                                        value="<?php echo isset($input['login']) ? $input['login'] : ''; ?>" placeholder="Usuario"
                                        readonly>
                             </div>
                             <div class="col-sm-6">
+                                <label for="idRol">Rol:</label>
                                 <select class="form-control" name="idRol" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
                                     <option value="">Rol</option>
                                     <?php

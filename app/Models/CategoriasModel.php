@@ -127,6 +127,19 @@ class CategoriasModel extends \Com\Daw2\Core\BaseModel {
         $stmt->execute([$id]);
         return $stmt->rowCount() > 0;
     }
+    
+    /**
+     * busca las categorias que pertenecen a una familia
+     * @param int $id la familia que se busca
+     * @return array|null las categorias si las hay, null si no
+     */
+    function buscarFam(int $id): ?array{
+        $query = "SELECT * FROM categoria WHERE idFamilia= ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+        
+        return $stmt->fetchAll();
+    }
 
 }
 

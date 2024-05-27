@@ -199,13 +199,14 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
     /**
      * busca las piezas de una categoria
      * @param int $id la categoria que se busca
-     * @return bool true si hay piezas con esa categoria, false si no
+     * @return array|null las piezas encontradas si las hay, null si no
      */
-    function buscarCat(int $id): bool{
+    function buscarCat(int $id): ?array{
         $query = "SELECT * FROM pieza WHERE idCategoria= ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$id]);
-        return $stmt->rowCount() > 0;
+        
+        return $stmt->fetchAll();
     }
 }
 

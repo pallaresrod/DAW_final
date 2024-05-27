@@ -77,17 +77,21 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
         if (!$model->delete($idCliente)) {
             $mensaje = [];
             $mensaje['class'] = 'danger';
-            $mensaje['texto'] = 'No se ha podido borrar la categoría.';
+            $mensaje['texto'] = 'No se ha podido borrar el cliente.';
         } else {
             $mensaje = [];
             $mensaje['class'] = 'success';
-            $mensaje['texto'] = 'Categoría eliminada con éxito.';
+            $mensaje['texto'] = 'Cliente eliminada con éxito.';
         }
 
         $_SESSION['mensaje'] = $mensaje;
         header('location: /clientes');
     }
     
+    /**
+     * muestra la información de un cliente
+     * @param int $idCliente el cliente que se quiere mostrar
+     */
     function mostrarCliente(int $idCliente) {
         $modelo = new \Com\Daw2\Models\ClientesModel();
 
@@ -103,6 +107,91 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
         );
 
         $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    /**
+     * muestra el formulario de editar un cliente
+     * @param int $idCliente el cliente que se quiere editar
+     */
+    function mostrarEdit(int $idCliente) {
+        $modelo = new \Com\Daw2\Models\ClientesModel();
+
+        $cliente = $modelo->loadById($idCliente);
+
+        //al compartir vista con edit necesitamos una manera de que si esta viendo el cliente no lo pueda editar
+        $readOnly = false;
+
+        $data = array(
+            'titulo' => 'Editar cliente',
+            'input' => $cliente,
+            'readonly' => $readOnly
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    /**
+     * procesa la petición de editar un cliente
+     * @param int $idCliente el cliente que se quiere editar
+     */
+    function procesarEdit(int $idCliente){
+        $errores = $this->checkEditForm($_POST, $idCliente);
+
+        //si no hay errores se actualiza el valor en la base de datos
+        if (count($errores) == 0) {
+            $model = new \Com\Daw2\Models\ClientesModel();
+            $update = $model->updateCliente($idCliente, $_POST);
+
+            //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+            if ($update > 0) {
+                header('location: /clientes');
+                die;
+            } else {
+                $errores['desconocido'] = 'Error desconocido. No se ha editado el cliente.';
+            }
+        }
+
+        $readOnly = false;
+
+        $data = array(
+            'titulo' => 'Editar cliente',
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'errores' => $errores,
+            'readonly' => $readOnly
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
+    }
+    
+    /**
+     * comprueba que el formulario de edición este correcto
+     * @param array $data los datos del formulario
+     * @param int $id el id de cliente que se quiere editar
+     * @return array los errores encontrados
+     */
+    private function checkEditForm(array $data, int $id): array{
+        
+        $errores = $this->checkForm($data);
+        
+        $model = new \Com\Daw2\Models\ClientesModel();
+
+        $nombre = $model->loadByNombreFiscalNotId($data['nombreFiscalCliente'], $id);
+        if (!is_null($nombre)) {
+            $errores['nombreFiscalCliente'] = 'El nombre introducido ya está en uso';
+        }
+
+        $denom = $model->loadByDenominacionNotId($data['denominacion'], $id);
+        if (!is_null($denom)) {
+            $errores['denominacion'] = 'La denominacion introducida ya está en uso';
+        }
+
+        $cif = $model->loadByCifNotId($data['cifCliente'], $id);
+        if (!is_null($cif)) {
+            $errores['denominacion'] = 'El cif introducido ya está en uso';
+        }
+        
+        return $errores;
+        
     }
 
     /**

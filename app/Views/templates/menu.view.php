@@ -184,8 +184,8 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
         <div id="collapseEvents" class="collapse" aria-labelledby="headingUtilities"
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">Ver eventos</a>
-                <a class="collapse-item" href="">Añadir evento</a>
+                <a class="collapse-item" href="/eventos">Ver eventos</a>
+                <a class="collapse-item" href="/evento/add">Añadir evento</a>
             </div>
         </div>
     </li>
@@ -193,7 +193,7 @@ if (strpos($_SESSION['permisos'], 'w') !== false) {
 } else {
     ?>
     <li class="nav-item">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="/eventos">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Eventos</span></a>
     </li>

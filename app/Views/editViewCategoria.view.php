@@ -28,11 +28,13 @@
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
+                                <label for="nombreCategoria">Nombre categoría:</label>
                                 <input type="text" class="form-control " id="nombreCategoria" name="nombreCategoria" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
                                        value="<?php echo isset($input['nombreCategoria']) ? $input['nombreCategoria'] : ''; ?>" placeholder="Nombre de la categoría">
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6">
+                                <label for="idFamilia">Familia:</label>
                                 <select class="form-control" name="idFamilia" <?php echo (isset($readonly) && $readonly) ? 'disabled' : ''; ?>>
                                     <option value="">Familia</option>
                                     <?php

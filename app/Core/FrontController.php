@@ -160,8 +160,25 @@ class FrontController {
                     }
                     , 'get');
 
-            //ver pieza
+            //ver cliente
             Route::add('/cliente/view/([0-9]+)',
+                    function ($id) {
+                        $controlador = new \Com\Daw2\Controllers\ClientesController();
+                        $controlador->mostrarCliente((int) $id);
+                    }
+                    , 'get');
+
+            /* GESTIÓN DE EVENTOS */
+
+            Route::add('/eventos',
+                    function () {
+                        $controlador = new \Com\Daw2\Controllers\EventosController();
+                        $controlador->mostrarTodos();
+                    }
+                    , 'get');
+
+            //ver evento
+            Route::add('/evento/view/([0-9]+)',
                     function ($id) {
                         $controlador = new \Com\Daw2\Controllers\ClientesController();
                         $controlador->mostrarCliente((int) $id);
@@ -326,7 +343,7 @@ class FrontController {
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');
-                        
+
                 //CLIENTES
                 //añadir cliente
                 Route::add('/cliente/add',
@@ -351,17 +368,17 @@ class FrontController {
                         }
                         , 'get');
 
-                //editar pieza
-                Route::add('/pieza/edit/([0-9]+)',
+                //editar cliente
+                Route::add('/cliente/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\PiezasController();
+                            $controlador = new \Com\Daw2\Controllers\ClientesController();
                             $controlador->mostrarEdit((int) $id);
                         }
                         , 'get');
 
-                Route::add('/pieza/edit/([0-9]+)',
+                Route::add('/cliente/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\PiezasController();
+                            $controlador = new \Com\Daw2\Controllers\ClientesController();
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');

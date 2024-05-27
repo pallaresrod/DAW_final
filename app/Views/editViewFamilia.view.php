@@ -28,6 +28,7 @@
                     <form class="user" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
+                                <label for="nombreFamilia">Nombre familia:</label>
                                 <input type="text" class="form-control " id="nombreFamilia" name="nombreFamilia" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
                                        value="<?php echo isset($input['nombreFamilia']) ? $input['nombreFamilia'] : ''; ?>" placeholder="Nombre de la familia">
                                 <p class="text-danger"><?php echo isset($errores['nombre']) ? $errores['nombre'] : ''; ?></p>

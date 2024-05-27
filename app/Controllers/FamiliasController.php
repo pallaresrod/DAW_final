@@ -97,13 +97,13 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
      */
     private function checkAddForm(array $data): array {
         $errores = $this->checkForm($data);
-        
+
         $model = new \Com\Daw2\Models\FamiliasModel();
         $familia = $model->loadByName($data['nombreFamilia']);
         if (!is_null($familia)) {
             $errores['nombre'] = 'El nombre seleccionado ya está en uso';
         }
-        
+
         return $errores;
     }
 
@@ -114,16 +114,24 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
     function processDelete(int $idFamilia) {
         $model = new \Com\Daw2\Models\FamiliasModel();
 
-        if (!$model->delete($idFamilia)) {
-            $mensaje = [];
-            $mensaje['class'] = 'danger';
-            $mensaje['texto'] = 'No se ha podido borrar la familia.';
+        //primeros comprobamos que la familia no este referenciando a ninguna categoría, porque si lo esta no se puede borrar
+        $modelCat = new \Com\Daw2\Models\CategoriasModel();
+
+        if (is_null($modelCat->buscarFam($idFamilia))) {
+            if (!$model->delete($idFamilia)) {
+                $mensaje = [];
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'No se ha podido borrar la familia.';
+            } else {
+                $mensaje = [];
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'Familia eliminada con éxito.';
+            }
         } else {
             $mensaje = [];
-            $mensaje['class'] = 'success';
-            $mensaje['texto'] = 'Familia eliminada con éxito.';
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se ha podido borrar la familia, pues está referenciando categorías. Asegurese de que una familia este vacía antes de borrarla.';
         }
-
 
         $_SESSION['mensaje'] = $mensaje;
         header('location: /familias');
@@ -135,9 +143,10 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
      */
     function mostrarFamilia(int $idFamilia) {
         $modelo = new \Com\Daw2\Models\FamiliasModel();
+        $modeloCat = new \Com\Daw2\Models\CategoriasModel();
 
         $familia = $modelo->loadById($idFamilia);
-
+        
         //al compartir vista con edit necesitamos una manera de que si esta viendo la familia no lo pueda editar
         $readOnly = true;
 
@@ -203,16 +212,16 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewFamilia.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * comprueba que el formulario de edicion no tenga errores
      * @param array $data los datos del formulario
      * @param int $idFamilia la familia que se edita
      * @return string los errores encontrados
      */
-    private function checkEditFrom(array $data, int $idFamilia){
+    private function checkEditFrom(array $data, int $idFamilia) {
         $errores = $this->checkForm($data);
-        
+
         $model = new \Com\Daw2\Models\FamiliasModel();
         $familia = $model->loadByNameNotId($data['nombreFamilia'], $idFamilia);
         if (!is_null($familia)) {

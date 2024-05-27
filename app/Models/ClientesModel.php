@@ -31,6 +31,23 @@ class ClientesModel extends \Com\Daw2\Core\BaseModel {
     }
     
     /**
+     * busca un cliente con el nombre que se pasa pero no el id
+     * @param string $name el nombre que se busca
+     * @param int $id el id que no tiene que coincidir
+     * @return array|null devuelve la fila si la encuentra, null si no
+     */
+    function loadByNombreFiscalNotId(string $name, int $id): ?array {
+        $query = "SELECT * FROM cliente WHERE nombreFiscalCliente = ? AND idCliente != ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$name, $id]);
+        if ($row = $stmt->fetch()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
      * busca un cliente con la denominacion pasada como parametro
      * @param string $denom la denominacion que se busca
      * @return array|null la fila en forma de array si se encuentra, null si no
@@ -47,7 +64,24 @@ class ClientesModel extends \Com\Daw2\Core\BaseModel {
     }
     
     /**
-     *  busca un cliente con el cif pasado como parametro
+     * busca un cliente con la denominación pasada como parámetro, pero no el id
+     * @param string $denom la denominación que se busca
+     * @param int $id el id que no debe coincidir
+     * @return array|null la fila si se encuentra, null si no
+     */
+    function loadByDenominacionNotId(string $denom, int $id): ?array {
+        $query = "SELECT * FROM cliente WHERE denominacion = ? AND idCliente != ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$denom, $id]);
+        if ($row = $stmt->fetch()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * busca un cliente con el cif pasado como parametro
      * @param string $cif el cif que se busca
      * @return array|null la fila en forma de array si se encuentra, null si no
      */
@@ -55,6 +89,23 @@ class ClientesModel extends \Com\Daw2\Core\BaseModel {
         $query = "SELECT * FROM cliente WHERE cifCliente = ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$cif]);
+        if ($row = $stmt->fetch()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * busca un cliente con el cif pasado como parametro pero no el id
+     * @param string $cif el cif que se busca
+     * @param int $id el id que no debe coincidir
+     * @return array|null la fila si se encuentra, null si no
+     */
+    function loadByCifNotId(string $cif, int $id): ?array {
+        $query = "SELECT * FROM cliente WHERE cifCliente = ? AND idCliente != ? ";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$cif, $id]);
         if ($row = $stmt->fetch()) {
             return $row;
         } else {
@@ -83,6 +134,27 @@ class ClientesModel extends \Com\Daw2\Core\BaseModel {
         } else {
             return 0;
         }
+    }
+    
+    /**
+     * actualiza un cliente
+     * @param int $idCliente el cliente que se actualiza
+     * @param array $data los datos
+     * @return bool true si lo actualiza sin problemas, false si no
+     */
+    function updateCliente(int $idCliente, array $data): bool {
+        $query = "UPDATE cliente SET nombreFiscalCliente=:nombreFiscalCliente, email=:email, denominacion=:denominacion, "
+                . "cifCliente=:cifCliente, direccion=:direccion WHERE idCliente=:idCliente";
+        $stmt = $this->pdo->prepare($query);
+        $vars = [
+            'nombreFiscalCliente' => $data['nombreFiscalCliente'],
+            'email' => trim($data['email']),
+            'denominacion' => trim($data['denominacion']),
+            'cifCliente' => trim($data['cifCliente']),
+            'direccion' => $data['direccion'],
+            'idCliente' => $idCliente
+        ];
+        return $stmt->execute($vars);
     }
     
     /**
