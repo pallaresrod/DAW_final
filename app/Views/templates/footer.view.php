@@ -52,6 +52,7 @@ el funcionamiento de la app
     </div>
 </div>
 
+
 <script>
 // JavaScript para la paginación
     document.addEventListener('DOMContentLoaded', function () {

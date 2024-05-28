@@ -180,8 +180,8 @@ class FrontController {
             //ver evento
             Route::add('/evento/view/([0-9]+)',
                     function ($id) {
-                        $controlador = new \Com\Daw2\Controllers\ClientesController();
-                        $controlador->mostrarCliente((int) $id);
+                        $controlador = new \Com\Daw2\Controllers\EventosController();
+                        $controlador->mostrarEvento((int) $id);
                     }
                     , 'get');
 
@@ -377,6 +377,44 @@ class FrontController {
                         , 'get');
 
                 Route::add('/cliente/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\ClientesController();
+                            $controlador->procesarEdit((int) $id);
+                        }
+                        , 'post');
+
+                //EVENTOS
+                //añadir evento
+                Route::add('/evento/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->mostrarAdd();
+                        }
+                        , 'get');
+
+                Route::add('/evento/add',
+                        function () {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->procesarAdd();
+                        }
+                        , 'post');
+
+                Route::add('/evento/delete/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->procesarDelete((int) $id);
+                        }
+                        , 'get');
+
+                //editar evento
+                Route::add('/evento/edit/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\ClientesController();
+                            $controlador->mostrarEdit((int) $id);
+                        }
+                        , 'get');
+
+                Route::add('/evento/edit/([0-9]+)',
                         function ($id) {
                             $controlador = new \Com\Daw2\Controllers\ClientesController();
                             $controlador->procesarEdit((int) $id);

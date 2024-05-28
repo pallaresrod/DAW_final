@@ -12,8 +12,55 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
      */
     function getAll(): array {
         
-        return $this->pdo->query("SELECT e.idEvento, e.nombreEvento, e.fechaInicioEstimada, e.fechaFinalEstimada, e.lugarEvento, e.observaciones, "
-                . "c.idCliente, c.nombreFiscalCliente FROM evento e JOIN cliente c ON e.idCliente = c.idCliente ORDER BY fechaInicioReal DESC")->fetchAll();
+        return $this->pdo->query("SELECT e.idEvento, e.nombreEvento, e.fechaInicioEstimada, e.fechaFinalEstimada, e.fechaFinalReal, e.lugarEvento, e.observaciones, "
+                . "c.idCliente, c.nombreFiscalCliente FROM evento e JOIN cliente c ON e.idCliente = c.idCliente ORDER BY fechaInicioEstimada DESC")->fetchAll();
+    }
+    
+    /**
+     * añade un evento a la base de datps
+     * @param array $data los datos del evento
+     * @return int 1 si se añade sin problema, 0 si no
+     */
+    function insertEvento(array $data): int {
+        $query = "INSERT INTO evento (nombreEvento, fechaInicioEstimada, fechaFinalEstimada, lugarEvento, observaciones, idCliente) "
+                . "VALUES (:nombreEvento, :fechaInicioEstimada, :fechaFinalEstimada, :lugarEvento, :observaciones, :idCliente)";
+        $stmt = $this->pdo->prepare($query);
+        $vars = [
+            'nombreEvento' => $data['nombreEvento'],
+            'fechaInicioEstimada' => $data['fechaInicioEstimada'],
+            'fechaFinalEstimada' => $data['fechaFinalEstimada'],
+            'lugarEvento' => $data['lugarEvento'],
+            'observaciones' => trim($data['observaciones']),
+            'idCliente' => $data['idCliente']
+        ];
+        if ($stmt->execute($vars)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    
+    /**
+     * busca un evento en especifico
+     * @param int $id el evento que se busca
+     * @return array|null devuelve la fila en modo array si la encuentra, null si no
+     */
+    function loadById(int $id): ?array{
+        $query = "SELECT * FROM evento WHERE idEvento = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+        if ($row = $stmt->fetch()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
+    
+    function delete(int $id): bool {
+        $query = "DELETE FROM evento WHERE idEvento = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+        return $stmt->rowCount() > 0;
     }
     
 }
