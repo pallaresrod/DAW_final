@@ -185,9 +185,73 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $_SESSION['mensaje'] = $mensaje;
         header('location: /eventos');
     }
-    
-    function mostrarAñadirPiezas(int $idEvento){
+
+    function mostrarAñadirPiezas(int $idEvento) {
+        $piezasModel = new \Com\Daw2\Models\PiezasModel();
+        $piezas = $piezasModel->getAll();
+
+        $eventoModel = new \Com\Daw2\Models\EventosModel();
+        $evento = $eventoModel->loadById($idEvento);
+
+        $data = array(
+            'titulo' => 'Piezas para el evento',
+            'evento' => $evento,
+            'piezas' => $piezas
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'addPiezasEvento.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    function procesarAñadirPiezas(int $idEvento) {
+        $errores = $this->checkPiezas($_POST);
+
+        //si no hay errores se actualiza el valor en la base de datos
+        if (count($errores) == 0) {
+            $model = new \Com\Daw2\Models\EventosModel();
+            $piezasModel = new \Com\Daw2\Models\PiezasModel();
+            
+            $update = $model->updateEvento($id, $_POST);
+
+            //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+            if ($update > 0) {
+                header('location: /eventos');
+                die;
+            } else {
+                $errores['desconocido'] = 'Error desconocido. No se ha editado el evento.';
+            }
+        }
+        $modeloCli = new \Com\Daw2\Models\ClientesModel();
+
+        $readOnly = false;
+        $clientes = $modeloCli->getAll();
+
+        $data = array(
+            'titulo' => 'Editar evento',
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'errores' => $errores,
+            'readonly' => $readOnly,
+            'clientes' => $clientes
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    private function checkPiezas(array $data) {
+
+        $errores = [];
+
+        $piezasModel = new \Com\Daw2\Models\PiezasModel();
+        $piezas = $piezasModel->getAll();
+
+        foreach ($piezas as $p) {
+            if (!empty($data['cantidad' . $p['idPieza']])) {
+                if (!filter_var($data['cantidad' . $p['idPieza']], FILTER_VALIDATE_FLOAT)) {
+                    $errores['cantidad' . $p['idPieza']] = 'Valor incorrecto';
+                }
+            }
+        }
         
+        return $errores;
     }
 
     /**

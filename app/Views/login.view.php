@@ -53,12 +53,9 @@
                                                    id="pass" name="pass" placeholder="Contraseña">
                                         </div>
                                         <p class="text-danger"><?php echo isset($errores['pass']) ? $errores['pass'] : ''; ?></p>
+                                        <hr>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Iniciar sesión</button>
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>

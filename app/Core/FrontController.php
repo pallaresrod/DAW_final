@@ -424,9 +424,9 @@ class FrontController {
                 Route::add('/evento/add/piezas/([0-9]+)',
                         function ($id) {
                             $controlador = new \Com\Daw2\Controllers\EventosController();
-                            $controlador->procesarEdit((int) $id);
+                            $controlador->mostrarAñadirPiezas((int) $id);
                         }
-                        , 'post');
+                        , 'get');
             }
 
             //no se encuentra la ruta. Error 404
