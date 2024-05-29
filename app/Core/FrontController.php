@@ -409,14 +409,21 @@ class FrontController {
                 //editar evento
                 Route::add('/evento/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\ClientesController();
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
                             $controlador->mostrarEdit((int) $id);
                         }
                         , 'get');
 
                 Route::add('/evento/edit/([0-9]+)',
                         function ($id) {
-                            $controlador = new \Com\Daw2\Controllers\ClientesController();
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->procesarEdit((int) $id);
+                        }
+                        , 'post');
+
+                Route::add('/evento/add/piezas/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
                             $controlador->procesarEdit((int) $id);
                         }
                         , 'post');

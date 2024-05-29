@@ -73,8 +73,88 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'addEvento.view.php', 'templates/footer.view.php'), $data);
     }
 
-    function mostrarEvento(int $id){
-        
+    /**
+     * muestra la info sobre un evento
+     * @param int $id el evento que se esta viendo
+     */
+    function mostrarEvento(int $id) {
+        $modelo = new \Com\Daw2\Models\EventosModel();
+        $modeloCli = new \Com\Daw2\Models\ClientesModel();
+
+        $evento = $modelo->loadById($id);
+        $clientes = $modeloCli->getAll();
+
+        //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
+        $readOnly = true;
+
+        $data = array(
+            'titulo' => 'Información de evento',
+            'input' => $evento,
+            'readonly' => $readOnly,
+            'clientes' => $clientes
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * muestra el formulario para editar un evento
+     * @param int $id el evento que se quiere editar
+     */
+    function mostrarEdit(int $id) {
+        $modelo = new \Com\Daw2\Models\EventosModel();
+        $modeloCli = new \Com\Daw2\Models\ClientesModel();
+
+        $evento = $modelo->loadById($id);
+        $clientes = $modeloCli->getAll();
+
+        //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
+        $readOnly = false;
+
+        $data = array(
+            'titulo' => 'Editar evento',
+            'input' => $evento,
+            'readonly' => $readOnly,
+            'clientes' => $clientes
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+    }
+
+    /**
+     * procesa la petición de editar un evento
+     * @param int $id
+     */
+    function procesarEdit(int $id) {
+        $errores = $this->checkEditForm($_POST);
+
+        //si no hay errores se actualiza el valor en la base de datos
+        if (count($errores) == 0) {
+            $model = new \Com\Daw2\Models\EventosModel();
+            $update = $model->updateEvento($id, $_POST);
+
+            //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
+            if ($update > 0) {
+                header('location: /eventos');
+                die;
+            } else {
+                $errores['desconocido'] = 'Error desconocido. No se ha editado el evento.';
+            }
+        }
+        $modeloCli = new \Com\Daw2\Models\ClientesModel();
+
+        $readOnly = false;
+        $clientes = $modeloCli->getAll();
+
+        $data = array(
+            'titulo' => 'Editar evento',
+            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'errores' => $errores,
+            'readonly' => $readOnly,
+            'clientes' => $clientes
+        );
+
+        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
     }
 
     /**
@@ -96,7 +176,7 @@ class EventosController extends \Com\Daw2\Core\BaseController {
                 $mensaje['class'] = 'success';
                 $mensaje['texto'] = 'Evento eliminado con éxito.';
             }
-        }else{
+        } else {
             $mensaje = [];
             $mensaje['class'] = 'danger';
             $mensaje['texto'] = $errores['mensaje'];
@@ -106,12 +186,16 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         header('location: /eventos');
     }
     
+    function mostrarAñadirPiezas(int $idEvento){
+        
+    }
+
     /**
      * comprueba que un evento no esté en proceso si se quiere borrar
      * @param int $idEvento el evento que se quiere borrar
      * @return array los errores encontrados
      */
-    private function checkDelete(int $idEvento) : array{
+    private function checkDelete(int $idEvento): array {
 
         $modal = new \Com\Daw2\Models\EventosModel();
         $evento = $modal->loadById($idEvento);
@@ -202,6 +286,39 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             }
         }
 
+        return $errores;
+    }
+
+    /**
+     * comprueba que el formulario de editar un evento sea correcto
+     * @param type $data los datos del formulario
+     * @return array los errores encontrados
+     */
+    private function checkEditForm($data): array {
+        $errores = $this->checkForm($data);
+
+        if (!empty($data['fechaInicioReal'])) {
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['fechaInicioReal'])) {
+                $errores['fechaInicioReal'] = 'El formato no es correcto.';
+            } else {
+                $fechaInicio = new \DateTime($data['fechaInicioReal']);
+                $fechaActual = new \DateTime();
+                if ($fechaInicio < $fechaActual) {
+                    $errores['fechaInicioReal'] = 'La fecha de inicio no puede ser anterior al día actual.';
+                }
+            }
+        }
+
+        if (!empty($data['fechaFinalReal'])) {
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['fechaFinalReal'])) {
+                $errores['fechaFinalReal'] = 'El formato no es correcto.';
+            } else {
+                $fechaFinal = new \DateTime($data['fechaFinalReal']);
+                if (isset($fechaInicio) && $fechaFinal < $fechaInicio) {
+                    $errores['fechaFinalReal'] = 'La fecha final no puede ser anterior a la fecha de inicio.';
+                }
+            }
+        }
         return $errores;
     }
 

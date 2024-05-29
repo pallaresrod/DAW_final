@@ -41,6 +41,31 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
     }
     
     /**
+     * actualiza los datos de un evento
+     * @param int $idEvento el evento que se actualiza
+     * @param array $data los datos del evento
+     * @return bool true si se actualiza, false si no
+     */
+    function updateEvento(int $idEvento, array $data): bool {
+        $query = "UPDATE evento SET nombreEvento=:nombreEvento, fechaInicioEstimada=:fechaInicioEstimada, "
+                . "fechaFinalEstimada=:fechaFinalEstimada, fechaInicioReal=:fechaInicioReal, fechaFinalReal=:fechaFinalReal, "
+                . "lugarEvento=:lugarEvento, observaciones=:observaciones, idCliente=:idCliente WHERE idEvento=:idEvento";
+        $stmt = $this->pdo->prepare($query);
+        $vars = [
+            'nombreEvento' => $data['nombreEvento'],
+            'fechaInicioEstimada' => $data['fechaInicioEstimada'],
+            'fechaFinalEstimada' => $data['fechaFinalEstimada'],
+            'fechaInicioReal' => empty($data['fechaInicioReal'])? null : $data['fechaInicioReal'],
+            'fechaFinalReal' => empty($data['fechaFinalReal'])? null : $data['fechaFinalReal'],
+            'lugarEvento' => $data['lugarEvento'],
+            'observaciones' => trim($data['observaciones']),
+            'idCliente' => $data['idCliente'],
+            'idEvento' => $idEvento
+        ];
+        return $stmt->execute($vars);
+    }
+    
+    /**
      * busca un evento en especifico
      * @param int $id el evento que se busca
      * @return array|null devuelve la fila en modo array si la encuentra, null si no
