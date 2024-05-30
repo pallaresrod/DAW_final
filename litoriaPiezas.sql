@@ -75,6 +75,7 @@ CREATE TABLE evento (
     fechaFinalReal datetime,
     lugarEvento VARCHAR(255),
     observaciones VARCHAR(255),
+    terminado INT DEFAULT 0,
     idCliente INT
 );
 

@@ -83,7 +83,9 @@ class EventosController extends \Com\Daw2\Core\BaseController {
 
         $evento = $modelo->loadById($id);
         $clientes = $modeloCli->getAll();
-
+        
+        $piezas = $modelo->piezasEvento($id);
+        
         //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
         $readOnly = true;
 
@@ -91,7 +93,8 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             'titulo' => 'Información de evento',
             'input' => $evento,
             'readonly' => $readOnly,
-            'clientes' => $clientes
+            'clientes' => $clientes,
+            'piezas' => $piezas
         );
 
         $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
@@ -205,35 +208,44 @@ class EventosController extends \Com\Daw2\Core\BaseController {
     function procesarAñadirPiezas(int $idEvento) {
         $errores = $this->checkPiezas($_POST);
 
+        $model = new \Com\Daw2\Models\EventosModel();
+        $piezasModel = new \Com\Daw2\Models\PiezasModel();
+
+        $piezas = $piezasModel->getAll();
+
         //si no hay errores se actualiza el valor en la base de datos
         if (count($errores) == 0) {
-            $model = new \Com\Daw2\Models\EventosModel();
-            $piezasModel = new \Com\Daw2\Models\PiezasModel();
-            
-            $update = $model->updateEvento($id, $_POST);
+
+            foreach ($piezas as $p) {
+                if (!empty($_POST['cantidad' . $p['idPieza']])) {
+                    
+                    $add = $model->addPiezasEvento($_POST, $p['idPieza'], $idEvento);
+
+                    $nuevoStock = isset($p['stockActual']) ? $p['stockActual'] - $_POST['cantidad'.$p['idPieza']] : $p['stock'] - $_POST['cantidad'.$p['idPieza']];
+                    $piezasModel->updateStock($p['idPieza'], $nuevoStock);
+                }
+            }
 
             //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
-            if ($update > 0) {
+            if ($add > 0) {
                 header('location: /eventos');
                 die;
             } else {
-                $errores['desconocido'] = 'Error desconocido. No se ha editado el evento.';
+                $errores['desconocido'] = 'Error desconocido. No se ha realizado la operación.';
             }
         }
-        $modeloCli = new \Com\Daw2\Models\ClientesModel();
 
-        $readOnly = false;
-        $clientes = $modeloCli->getAll();
+        $evento = $model->loadById($idEvento);
 
         $data = array(
-            'titulo' => 'Editar evento',
+            'titulo' => 'Piezas para el evento',
             'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
             'errores' => $errores,
-            'readonly' => $readOnly,
-            'clientes' => $clientes
+            'evento' => $evento,
+            'piezas' => $piezas
         );
 
-        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+        $this->view->showViews(array('templates/header.view.php', 'addPiezasEvento.view.php', 'templates/footer.view.php'), $data);
     }
 
     private function checkPiezas(array $data) {
@@ -247,10 +259,23 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             if (!empty($data['cantidad' . $p['idPieza']])) {
                 if (!filter_var($data['cantidad' . $p['idPieza']], FILTER_VALIDATE_FLOAT)) {
                     $errores['cantidad' . $p['idPieza']] = 'Valor incorrecto';
+                } else {
+                    if (isset($p['stockActuak'])) {
+                        if ($data['cantidad' . $p['idPieza']] > $p['stockActuak']) {
+                            $errores['cantidad' . $p['idPieza']] = 'La cantidad de stock introducida no está disponible';
+                        }
+                    } else if ($data['cantidad' . $p['idPieza']] > $p['stock']) {
+                        $errores['cantidad' . $p['idPieza']] = 'La cantidad de stock introducida no está disponible';
+                    }
+                }
+            }
+            if (!empty($data['observaciones' . $p['idPieza']])) {
+                if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{1,255}$/', $data['observaciones' . $p['idPieza']])) {
+                    $errores['observaciones' . $p['idPieza']] = 'El texto de observaciones debe ser menor a 255 caracteres y solo puede contener letras, números y espacios';
                 }
             }
         }
-        
+
         return $errores;
     }
 

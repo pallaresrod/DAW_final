@@ -16,7 +16,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
                         . " JOIN familia f ON c.idFamilia = f.idFamilia ORDER BY p.nombreOficial")->fetchAll();
     }
 
-    /** 
+    /**
      * selecciona las piezas con el idFamilia e idCategoria que se pasan como parametros 
      * @param array $data los id de categoria y familia que se buscan
      * @return array las piezas que cumplen los requisitos
@@ -64,7 +64,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * Busca una pieza con el nombre oficial pasado como parametro, que no tengal el id pasado como parametro
      * @param string $nombre el nombre que se busca
@@ -81,7 +81,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * busca una pieza con el nombre oficial pasado como parámetro
      * @param string $nombre el nombre que se busca
@@ -97,7 +97,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * Busca una pieza con el codigo de pieza pasado como parametro, que no tengal el id pasado como parametro
      * @param string $codigo el codigo que se busca
@@ -114,7 +114,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * busca una pieza con el codigo de pieza pasado como parámetro
      * @param string $codigo el codigo que se busca
@@ -130,7 +130,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return null;
         }
     }
-    
+
     /**
      * actualiza una pieza
      * @param int $idPieza la pieza que se actualiza
@@ -140,7 +140,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
     function updatePieza(int $idPieza, array $data): bool {
         $query = "UPDATE pieza SET codigoPieza= :codigoPieza, nombreOficial= :nombreOficial, codigoMarca= :codigoMarca, precio= :precio,"
                 . " stock= :stock, peso= :peso, longitud= :longitud, observaciones= :observaciones, idCategoria= :idCategoria WHERE idPieza= :idPieza";
-        
+
         $stmt = $this->pdo->prepare($query);
         $vars = [
             'codigoPieza' => $data['codigoPieza'],
@@ -156,7 +156,22 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
         ];
         return $stmt->execute($vars);
     }
-    
+
+    /**
+     * actualiza el stockActual de una pieza
+     * @param int $idPieza la pieza que se actualiza
+     * @param int $stock el stock nuevo
+     * @return bool true si se realiza con éxito, false si no
+     */
+    function updateStock(int $idPieza, int $stock): bool {
+        $query = "UPDATE pieza SET stockActual= ? WHERE idPieza = ?";
+
+        $stmt = $this->pdo->prepare($query);
+
+        return $stmt->execute([$stock, $idPieza]);
+        
+    }
+
     /**
      * añade una pieza a la base de datos
      * @param array $data la info de la pieza
@@ -183,7 +198,7 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             return 0;
         }
     }
-    
+
     /**
      * borrar una pieza
      * @param int $id la pieza ha borrar
@@ -195,19 +210,20 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
         $stmt->execute([$id]);
         return $stmt->rowCount() > 0;
     }
-    
+
     /**
      * busca las piezas de una categoria
      * @param int $id la categoria que se busca
      * @return array|null las piezas encontradas si las hay, null si no
      */
-    function buscarCat(int $id): ?array{
+    function buscarCat(int $id): ?array {
         $query = "SELECT * FROM pieza WHERE idCategoria= ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$id]);
-        
+
         return $stmt->fetchAll();
     }
+
 }
 
 ?>

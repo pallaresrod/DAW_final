@@ -20,7 +20,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-success">Introduzca los datos del nuevo evento</h6>
+            <h6 class="m-0 font-weight-bold text-success">Evento</h6>
         </div>
         <div class="card-body">
             <div>
@@ -104,6 +104,54 @@
                                 <p class="text-danger"><?php echo isset($errores['idCliente']) ? $errores['idCliente'] : ''; ?></p>
                             </div>
                         </div>
+                        <?php
+                        if ($readonly) {
+                            ?>
+                            <hr>
+                            <h6 class="m-0 font-weight-bold text-success mb-2">Piezas para el evento</h6>
+                            <div>
+                                <?php
+                                if (count($piezas) > 0) {
+                                    ?>
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                    
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Cantidad</th>
+                                                <th>Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            foreach ($piezas as $p) {
+                                                ?>
+                                                <tr>
+                                                    <td><a href="/pieza/view/<?php echo $p['idPieza']; ?>" target="_blank"><?php echo $p['nombreOficial']; ?></a></td>
+                                                    <td><?php echo $p['cantidad']; ?></td> 
+                                                    <td><?php echo $p['observaciones']; ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                        <tfoot>
+                                            Total de registros: <?php echo count($piezas); ?>
+                                        </tfoot>
+                                    </table>
+                                    <div id="pagination" class="mt-3 text-center">
+                                        <!-- Los controles de paginación son generados por JavaScript si es necesario-->
+                                    </div>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <p class="text-danger">Este evento no tiene piezas asociadas.</p>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
+                        }
+                        ?>
                         <div class="form-group row">
                             <div class="col-sm-12 mb-4 mb-sm-0 align-content-sm-end text-right p-3">
                                 <?php

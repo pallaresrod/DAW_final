@@ -34,6 +34,7 @@
                                         <th>Nombre</th>
                                         <th>Stock Actual</th>
                                         <th>Cantidad</th>
+                                        <th>Observaciones</th>                                    
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,8 +46,15 @@
                                             <td><?php echo $p['nombreOficial']; ?></td>
                                             <td><?php echo (is_null($p['stockActual']) || $p['stockActual'] == 0) ? $p['stock'] . ' (completo)' : $p['stockActual']; ?></td> 
                                             <td>
-                                                <input type="number" class="form-control " id="cantidad<?php echo $p['idPieza']; ?>" name="cantidad<?php echo $p['idPieza']; ?>">
-                                                <p class="text-danger"><?php echo isset($errores['cantidad'. $p['idPieza']]) ? $errores['cantidad'. $p['idPieza']] : ''; ?></p>
+                                                <input type="number" class="form-control " id="cantidad<?php echo $p['idPieza']; ?>" name="cantidad<?php echo $p['idPieza']; ?>"
+                                                       <?php echo isset($input['cantidad' . $p['idPieza']]) ? $input['cantidad' . $p['idPieza']] : ''; ?>>
+                                                <p class="text-danger"><?php echo isset($errores['cantidad' . $p['idPieza']]) ? $errores['cantidad' . $p['idPieza']] : ''; ?></p>
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control" id="observaciones<?php echo $p['idPieza']; ?>" name="observaciones<?php echo $p['idPieza']; ?>">
+                                                    <?php echo isset($input['observaciones'.$p['idPieza']]) ? trim($input['observaciones'].$p['idPieza']) : ''; ?>
+                                                </textarea>
+                                                <p class="text-danger"><?php echo isset($errores['observaciones'.$p['idPieza']]) ? $errores['observaciones'.$p['idPieza']] : ''; ?></p>
                                             </td>
                                         </tr>
                                         <?php

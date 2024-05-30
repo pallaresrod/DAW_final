@@ -427,6 +427,13 @@ class FrontController {
                             $controlador->mostrarAñadirPiezas((int) $id);
                         }
                         , 'get');
+
+                Route::add('/evento/add/piezas/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->procesarAñadirPiezas((int) $id);
+                        }
+                        , 'post');
             }
 
             //no se encuentra la ruta. Error 404
