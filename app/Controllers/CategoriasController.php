@@ -132,10 +132,10 @@ class CategoriasController extends \Com\Daw2\Core\BaseController {
             $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
         }
 
-        if (empty($data['descripcion'])) {
-            $errores['descripcion'] = 'Inserte una descripción';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]{4,255}$/', $data['descripcion'])) {
-            $errores['descripcion'] = 'La descripción debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+        if (!empty($data['descripcion'])) {
+            if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]{4,255}$/', $data['descripcion'])) {
+                $errores['descripcion'] = 'La descripción debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+            }
         }
 
         if (empty($data['idFamilia'])) {

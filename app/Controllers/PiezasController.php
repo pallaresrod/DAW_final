@@ -128,7 +128,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
                 $errores['desconocido'] = 'Error desconocido. No se ha editado la pieza.';
             }
         }
-        
+
         $modelocat = new \Com\Daw2\Models\CategoriasModel();
         $categorias = $modelocat->getAll();
 
@@ -144,7 +144,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewPieza.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * muestra el formulario para añadir una pieza
      */
@@ -159,11 +159,11 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'addPieza.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * procesa la petición de añadir una pieza
      */
-    function procesarAdd(){
+    function procesarAdd() {
         //comprueba errores
         $errores = $this->checkAddForm($_POST);
 
@@ -193,7 +193,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'addPieza.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * procesa la petición de borrar una pieza
      * @param int $idPieza la pieza que se quiere borrar
@@ -201,31 +201,40 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
     function processDelete(int $idPieza) {
         $model = new \Com\Daw2\Models\PiezasModel();
 
-        if (!$model->delete($idPieza)) {
+        //primero nos aseguramos de que la pieza no se este usando en ningún proyecto
+        $modeloEvento = new \Com\Daw2\Models\EventosModel();
+
+        if (is_null($modeloEvento->buscarPieza($idPieza))) {
+            if (!$model->delete($idPieza)) {
+                $mensaje = [];
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'No se ha podido borrar la pieza.';
+            } else {
+                $mensaje = [];
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'Pieza eliminada con éxito.';
+            }
+        }else {
             $mensaje = [];
             $mensaje['class'] = 'danger';
-            $mensaje['texto'] = 'No se ha podido borrar la pieza.';
-        } else {
-            $mensaje = [];
-            $mensaje['class'] = 'success';
-            $mensaje['texto'] = 'Pieza eliminada con éxito.';
+            $mensaje['texto'] = 'No se ha podido borrar la pieza, pues se está usando o se previene usar en eventos. '
+                    . 'Asegurese de que una pieza no este asociada a ningún evento antes de borrarla.';
         }
-
 
         $_SESSION['mensaje'] = $mensaje;
         header('location: /piezas');
     }
-    
+
     /**
      * comprueba que el formulario de añadir pieza este correcto
      * @param type $data los datos del formulario
      * @return array los errores encontrados
      */
-    private function checkAddForm($data) : array {
+    private function checkAddForm($data): array {
         $errores = $this->checkForm($data);
-        
+
         $model = new \Com\Daw2\Models\PiezasModel();
-        
+
         $piezaNombre = $model->loadByNombreOficial($data['nombreOficial']);
         if (!is_null($piezaNombre)) {
             $errores['nombreOficial'] = 'El nombre seleccionado ya está en uso';
@@ -235,7 +244,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
         if (!is_null($piezaCodigo)) {
             $errores['codigoPieza'] = 'El nombre seleccionado ya está en uso';
         }
-        
+
         return $errores;
     }
 
@@ -313,10 +322,10 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
             $errores['longitud'] = 'Valor incorrecto. Introduzca la longitud de la siguente manera: Ej 50.3cm';
         }
 
-        if (empty($data['observaciones'])) {
-            $errores['observaciones'] = 'Inserte observaciones';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{4,255}$/', $data['observaciones'])) {
+        if (!empty($data['observaciones'])) {
+            if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{4,255}$/', $data['observaciones'])) {
             $errores['observaciones'] = 'El texto de observaciones debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+        }
         }
 
         if (empty($data['idCategoria'])) {

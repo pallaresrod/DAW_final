@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <?php
-                        if ($readonly) {
+                        if ($readonly && $input['terminado'] == 0) {
                             ?>
                             <hr>
                             <h6 class="m-0 font-weight-bold text-success mb-2">Piezas para el evento</h6>
@@ -158,6 +158,7 @@
                                 if (!$readonly) {
                                     ?>
                                     <input type="submit" value="Enviar" name="enviar" class="btn btn-primary"/>
+                                    <a href="/evento/terminar/<?php echo $idEvento ?>" class="btn btn-danger ml-3">Terminar Evento</a> 
                                     <?php
                                 }
                                 ?>

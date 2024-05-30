@@ -54,7 +54,7 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <label for="observaciones">Observaciones:</label>
                                 <textarea class="form-control" id="observaciones" name="observaciones">
-                                    <?php echo isset($input['observaciones']) ? $input['observaciones'] : ''; ?>
+                                    <?php echo isset($input['observaciones']) ? trim($input['observaciones']) : ''; ?>
                                 </textarea>
                                 <p class="text-danger"><?php echo isset($errores['observaciones']) ? $errores['observaciones'] : ''; ?></p>
                             </div>

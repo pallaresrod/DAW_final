@@ -99,7 +99,7 @@
                                     <td><?php echo $p['codigoPieza']; ?></td>
                                     <td><?php echo $p['nombreOficial']; ?></td>
                                     <td><?php echo $p['precio']; ?></td>
-                                    <td><?php echo (is_null($p['stockActual']) || $p['stockActual'] == 0) ? $p['stock'] . ' (completo)' : $p['stockActual']; ?></td> 
+                                    <td><?php echo (is_null($p['stockActual']) || $p['stockActual'] == 0 || $p['stockActual'] == $p['stock']) ? $p['stock'] . ' (completo)' : $p['stockActual']; ?></td> 
                                     <td><a href="/categoria/view/<?php echo $p['idCategoria']; ?>" target="_blank"><?php echo $p['nombreCategoria']; ?></a></td>
                                     <td><a href="/familia/view/<?php echo $p['idFamilia']; ?>" target="_blank"><?php echo $p['nombreFamilia']; ?></a></td>
                                     <td>                              

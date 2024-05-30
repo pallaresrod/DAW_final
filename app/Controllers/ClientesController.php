@@ -74,20 +74,29 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
     function processDelete(int $idCliente) {
         $model = new \Com\Daw2\Models\ClientesModel();
 
-        if (!$model->delete($idCliente)) {
-            $mensaje = [];
-            $mensaje['class'] = 'danger';
-            $mensaje['texto'] = 'No se ha podido borrar el cliente.';
+        //primero comprobamos que el cliente no tenga ningún proyecto
+        $modeloEvento = new \Com\Daw2\Models\EventosModel();
+
+        if (is_null($modeloEvento->buscarCliente($idCliente))) {
+            if (!$model->delete($idCliente)) {
+                $mensaje = [];
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'No se ha podido borrar el cliente.';
+            } else {
+                $mensaje = [];
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'Cliente eliminada con éxito.';
+            }
         } else {
             $mensaje = [];
-            $mensaje['class'] = 'success';
-            $mensaje['texto'] = 'Cliente eliminada con éxito.';
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'No se ha podido borrar el cliente, pues hay proyectos hasociados a este. Asegurese de que una cliente no este asociado a un evento antes de borrarlo.';
         }
 
         $_SESSION['mensaje'] = $mensaje;
         header('location: /clientes');
     }
-    
+
     /**
      * muestra la información de un cliente
      * @param int $idCliente el cliente que se quiere mostrar
@@ -108,7 +117,7 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * muestra el formulario de editar un cliente
      * @param int $idCliente el cliente que se quiere editar
@@ -129,12 +138,12 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * procesa la petición de editar un cliente
      * @param int $idCliente el cliente que se quiere editar
      */
-    function procesarEdit(int $idCliente){
+    function procesarEdit(int $idCliente) {
         $errores = $this->checkEditForm($_POST, $idCliente);
 
         //si no hay errores se actualiza el valor en la base de datos
@@ -162,17 +171,17 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
 
         $this->view->showViews(array('templates/header.view.php', 'editViewCliente.view.php', 'templates/footer.view.php'), $data);
     }
-    
+
     /**
      * comprueba que el formulario de edición este correcto
      * @param array $data los datos del formulario
      * @param int $id el id de cliente que se quiere editar
      * @return array los errores encontrados
      */
-    private function checkEditForm(array $data, int $id): array{
-        
+    private function checkEditForm(array $data, int $id): array {
+
         $errores = $this->checkForm($data);
-        
+
         $model = new \Com\Daw2\Models\ClientesModel();
 
         $nombre = $model->loadByNombreFiscalNotId($data['nombreFiscalCliente'], $id);
@@ -189,9 +198,8 @@ class ClientesController extends \Com\Daw2\Core\BaseController {
         if (!is_null($cif)) {
             $errores['denominacion'] = 'El cif introducido ya está en uso';
         }
-        
+
         return $errores;
-        
     }
 
     /**

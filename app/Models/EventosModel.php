@@ -12,8 +12,8 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
      */
     function getAll(): array {
 
-        return $this->pdo->query("SELECT e.idEvento, e.nombreEvento, e.fechaInicioEstimada, e.fechaFinalEstimada, e.fechaFinalReal, e.lugarEvento, e.observaciones, "
-                        . "c.idCliente, c.nombreFiscalCliente FROM evento e JOIN cliente c ON e.idCliente = c.idCliente ORDER BY fechaInicioEstimada DESC")->fetchAll();
+        return $this->pdo->query("SELECT e.idEvento, e.nombreEvento, e.fechaInicioEstimada, e.fechaFinalEstimada, e.fechaFinalReal, e.lugarEvento, e.terminado, e.observaciones, "
+                        . "c.idCliente, c.nombreFiscalCliente FROM evento e JOIN cliente c ON e.idCliente = c.idCliente ORDER BY e.terminado ASC, e.fechaInicioEstimada DESC")->fetchAll();
     }
 
     /**
@@ -94,6 +94,18 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
     }
 
     /**
+     * actualizar un evento para terminarlo
+     * @param int $id el evento que se termina
+     * @return bool true si se actualiza sin problema, false si no
+     */
+    function terminarEvento(int $id): bool {
+        $query = "UPDATE evento SET terminado = 1 WHERE idEvento = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * añade un registro de las piezas necesarias para un evento
      * @param array $data datos sobre el registro
      * @param int $idPieza la pieza que se mete
@@ -111,17 +123,56 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
         ];
         return $stmt->execute($vars);
     }
-    
+
     /**
-     * 
-     * @param int $idEvento
-     * @return type
+     * busca las piezas que están siedno utilizadas en un evento
+     * @param int $idEvento el evento
+     * @return array|null la info de las piezas is las encuentra, si no null
      */
-    function piezasEvento(int $idEvento) {
-        $query = "SELECT pe.*, p.nombreOficial FROM piezas_evento pe JOIN pieza p ON pe.idPieza=p.idPieza WHERE pe.idEvento = ?";
+    function piezasEvento(int $idEvento): ?array {
+        $query = "SELECT pe.*, p.nombreOficial, p.stockActual FROM piezas_evento pe JOIN pieza p ON pe.idPieza=p.idPieza WHERE pe.idEvento = ?";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([$idEvento]);
-        
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * borra una peza de un evento
+     * @param int $idEvento el evento de donde se borra
+     * @param int $idPiezas la pieza que se borra
+     * @return bool true si se realiza sin problemas, false si no
+     */
+    function removePiezasEvento(int $idEvento, int $idPieza): bool {
+        $query = "DELETE FROM piezas_evento WHERE idPieza = ? AND idEvento = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$idPieza, $idEvento]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * busca eventos en los que se encuentre al cliente pasado como parámetro
+     * @param int $id el cliente que se busca
+     * @return array|null la info encontrada si la hay, null si no
+     */
+    function buscarCliente(int $id): ?array {
+        $query = "SELECT * FROM evento WHERE idCliente= ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * busca eventos con la pieza pasada como parámetro
+     * @param int $id la pieza que se busca
+     * @return array|null la info encontrada si la hay, null si no
+     */
+    function buscarPieza(int $id): ?array{
+        $query = "SELECT * FROM piezas_evento WHERE idPieza= ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);
+
         return $stmt->fetchAll();
     }
 

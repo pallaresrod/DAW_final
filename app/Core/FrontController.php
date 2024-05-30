@@ -421,6 +421,15 @@ class FrontController {
                         }
                         , 'post');
 
+                //terminar un evento
+                Route::add('/evento/terminar/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\EventosController();
+                            $controlador->terminarEvento((int) $id);
+                        }
+                        , 'get');
+
+                //añadir piezas al evento
                 Route::add('/evento/add/piezas/([0-9]+)',
                         function ($id) {
                             $controlador = new \Com\Daw2\Controllers\EventosController();

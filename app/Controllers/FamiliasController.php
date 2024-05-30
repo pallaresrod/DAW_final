@@ -81,10 +81,10 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
             $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
         }
 
-        if (empty($data['descripcion'])) {
-            $errores['descripcion'] = 'Inserte una descripción';
-        } else if (!preg_match('/^[a-zA-Z0-9À-ÿ\u00f1\u00d1 ]{4,255}$/', $data['descripcion'])) {
-            $errores['descripcion'] = 'La descripción debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+        if (!empty($data['descripcion'])) {
+            if (!preg_match('/^[a-zA-Z0-9À-ÿ\u00f1\u00d1 ]{4,255}$/', $data['descripcion'])) {
+                $errores['descripcion'] = 'La descripción debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+            }
         }
 
         return $errores;
@@ -146,7 +146,7 @@ class FamiliasController extends \Com\Daw2\Core\BaseController {
         $modeloCat = new \Com\Daw2\Models\CategoriasModel();
 
         $familia = $modelo->loadById($idFamilia);
-        
+
         //al compartir vista con edit necesitamos una manera de que si esta viendo la familia no lo pueda editar
         $readOnly = true;
 

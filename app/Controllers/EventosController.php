@@ -54,7 +54,6 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
             if ($insert > 0) {
                 header('location: /eventos');
-                die;
             } else {
                 $errores['desconocido'] = 'Error desconocido. No se ha insertado el evento.';
             }
@@ -83,9 +82,9 @@ class EventosController extends \Com\Daw2\Core\BaseController {
 
         $evento = $modelo->loadById($id);
         $clientes = $modeloCli->getAll();
-        
+
         $piezas = $modelo->piezasEvento($id);
-        
+
         //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
         $readOnly = true;
 
@@ -101,6 +100,46 @@ class EventosController extends \Com\Daw2\Core\BaseController {
     }
 
     /**
+     * procesa la petición para dar un evento como terminado
+     * @param int $id el evento que se quiere terminar
+     */
+    function terminarEvento(int $id) {
+
+        $modelo = new \Com\Daw2\Models\EventosModel();
+        $modeloPiezas = new \Com\Daw2\Models\PiezasModel();
+
+        $piezas = $modelo->piezasEvento($id);
+
+        $errores = $this->checkDelete($id);
+
+        if (count($errores) == 0) {
+            foreach ($piezas as $p) {
+                $stockNuevo = $p['cantidad'] + $p['stockActual'];
+                $modeloPiezas->updateStock($p['idPieza'], $stockNuevo);
+                $modelo->removePiezasEvento($id, $p['idPieza']);
+            }
+
+            $terminar = $modelo->terminarEvento($id);
+
+            $mensaje = [];
+            if ($terminar) {
+                $mensaje['class'] = 'success';
+                $mensaje['texto'] = 'El evento se ha dado por terminado.';
+            } else {
+                $mensaje['class'] = 'danger';
+                $mensaje['texto'] = 'Error desconocido. No se ha dado el evento por terminado.';
+            }
+        } else {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = $errores['mensaje'];
+        }
+
+        $_SESSION['mensaje'] = $mensaje;
+        header('location: /eventos');
+    }
+
+    /**
      * muestra el formulario para editar un evento
      * @param int $id el evento que se quiere editar
      */
@@ -109,19 +148,30 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $modeloCli = new \Com\Daw2\Models\ClientesModel();
 
         $evento = $modelo->loadById($id);
-        $clientes = $modeloCli->getAll();
 
-        //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
-        $readOnly = false;
+        if ($evento['terminado'] == 1) {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'El evento ya terminó. No se puede editar';
+            $_SESSION['mensaje'] = $mensaje;
+            header('location: /eventos');
+        } else {
+            $clientes = $modeloCli->getAll();
+            $eventoId = $evento['idEvento'];
 
-        $data = array(
-            'titulo' => 'Editar evento',
-            'input' => $evento,
-            'readonly' => $readOnly,
-            'clientes' => $clientes
-        );
+            //al compartir vista con edit necesitamos una manera de que si esta viendo la categoría no la pueda editar
+            $readOnly = false;
 
-        $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+            $data = array(
+                'titulo' => 'Editar evento',
+                'input' => $evento,
+                'idEvento' => $eventoId,
+                'readonly' => $readOnly,
+                'clientes' => $clientes
+            );
+
+            $this->view->showViews(array('templates/header.view.php', 'editViewEvento.view.php', 'templates/footer.view.php'), $data);
+        }
     }
 
     /**
@@ -130,16 +180,15 @@ class EventosController extends \Com\Daw2\Core\BaseController {
      */
     function procesarEdit(int $id) {
         $errores = $this->checkEditForm($_POST);
-
+        $model = new \Com\Daw2\Models\EventosModel();
+        
         //si no hay errores se actualiza el valor en la base de datos
         if (count($errores) == 0) {
-            $model = new \Com\Daw2\Models\EventosModel();
             $update = $model->updateEvento($id, $_POST);
 
             //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
             if ($update > 0) {
                 header('location: /eventos');
-                die;
             } else {
                 $errores['desconocido'] = 'Error desconocido. No se ha editado el evento.';
             }
@@ -147,11 +196,14 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $modeloCli = new \Com\Daw2\Models\ClientesModel();
 
         $readOnly = false;
+        $evento = $model->loadById($id);
         $clientes = $modeloCli->getAll();
+        $eventoId = $evento['idEvento'];
 
         $data = array(
             'titulo' => 'Editar evento',
             'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'idEvento' => $eventoId,
             'errores' => $errores,
             'readonly' => $readOnly,
             'clientes' => $clientes
@@ -189,6 +241,10 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         header('location: /eventos');
     }
 
+    /**
+     * muestra la patalla para añadir piezas a un evento
+     * @param int $idEvento el evento al que se quieren añadir las piezas
+     */
     function mostrarAñadirPiezas(int $idEvento) {
         $piezasModel = new \Com\Daw2\Models\PiezasModel();
         $piezas = $piezasModel->getAll();
@@ -196,15 +252,27 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $eventoModel = new \Com\Daw2\Models\EventosModel();
         $evento = $eventoModel->loadById($idEvento);
 
-        $data = array(
-            'titulo' => 'Piezas para el evento',
-            'evento' => $evento,
-            'piezas' => $piezas
-        );
+        if ($evento['terminado'] == 1) {
+            $mensaje = [];
+            $mensaje['class'] = 'danger';
+            $mensaje['texto'] = 'El evento ya terminó. No se puede añadir piezas';
+            $_SESSION['mensaje'] = $mensaje;
+            header('location: /eventos');
+        } else {
+            $data = array(
+                'titulo' => 'Piezas para el evento',
+                'evento' => $evento,
+                'piezas' => $piezas
+            );
 
-        $this->view->showViews(array('templates/header.view.php', 'addPiezasEvento.view.php', 'templates/footer.view.php'), $data);
+            $this->view->showViews(array('templates/header.view.php', 'addPiezasEvento.view.php', 'templates/footer.view.php'), $data);
+        }
     }
 
+    /**
+     * procesa la petición de añadir piezas a un evento
+     * @param int $idEvento el evento al que se añaden las piezas
+     */
     function procesarAñadirPiezas(int $idEvento) {
         $errores = $this->checkPiezas($_POST);
 
@@ -218,10 +286,10 @@ class EventosController extends \Com\Daw2\Core\BaseController {
 
             foreach ($piezas as $p) {
                 if (!empty($_POST['cantidad' . $p['idPieza']])) {
-                    
+
                     $add = $model->addPiezasEvento($_POST, $p['idPieza'], $idEvento);
 
-                    $nuevoStock = isset($p['stockActual']) ? $p['stockActual'] - $_POST['cantidad'.$p['idPieza']] : $p['stock'] - $_POST['cantidad'.$p['idPieza']];
+                    $nuevoStock = isset($p['stockActual']) ? $p['stockActual'] - $_POST['cantidad' . $p['idPieza']] : $p['stock'] - $_POST['cantidad' . $p['idPieza']];
                     $piezasModel->updateStock($p['idPieza'], $nuevoStock);
                 }
             }
@@ -229,7 +297,6 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             //si la operación no se realizó con exito se crea un error desconocido que saldrá por pantalla
             if ($add > 0) {
                 header('location: /eventos');
-                die;
             } else {
                 $errores['desconocido'] = 'Error desconocido. No se ha realizado la operación.';
             }
@@ -248,7 +315,12 @@ class EventosController extends \Com\Daw2\Core\BaseController {
         $this->view->showViews(array('templates/header.view.php', 'addPiezasEvento.view.php', 'templates/footer.view.php'), $data);
     }
 
-    private function checkPiezas(array $data) {
+    /**
+     * comprueba que los datos insertados para añadir las piezas a un evento sean correctos
+     * @param array $data los datos que se comprueban
+     * @return array los errores encontrados
+     */
+    private function checkPiezas(array $data): array {
 
         $errores = [];
 
@@ -300,7 +372,7 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             $fechaFinalReal = new \DateTime($evento['fechaFinalReal']);
 
             if ($fechaFinalReal > $fechaActual && $fechaInicioReal < $fechaActual) {
-                $errores['mensaje'] = 'El evento está en proceso. No se puede borrar.';
+                $errores['mensaje'] = 'No se puede realizar la acción. El evento está en proceso.';
             }
         } else {
 
@@ -308,7 +380,7 @@ class EventosController extends \Com\Daw2\Core\BaseController {
             $fechaFinalEstimada = new \DateTime($evento['fechaFinalEstimada']);
 
             if ($fechaFinalEstimada > $fechaActual && $fechaInicioEstimada < $fechaActual) {
-                $errores['mensaje'] = 'Se ha estimado que el evento está en proceso. No se puede borrar.';
+                $errores['mensaje'] = 'No se puede realizar la acción. Se ha estimado que el evento está en proceso.';
             }
         }
 
