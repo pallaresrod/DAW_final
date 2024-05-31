@@ -63,14 +63,6 @@ class FrontController {
                     }
                     , 'get');
 
-            //ver actividad de un usuario
-            Route::add('/actividad/([0-9]+)',
-                    function ($id) {
-                        $controlador = new \Com\Daw2\Controllers\UsuarioController();
-                        $controlador->mostrarActividadUser((int) $id);
-                    }
-                    , 'get');
-
             //edición de perfil
             Route::add('/editarPerfil/([0-9]+)',
                     function ($id) {
@@ -189,6 +181,14 @@ class FrontController {
             if (strpos($_SESSION['permisos'], 'w') !== false) {
 
                 //USUARIOS
+                //ver actividad de un usuario
+                Route::add('/actividad/([0-9]+)',
+                        function ($id) {
+                            $controlador = new \Com\Daw2\Controllers\UsuarioController();
+                            $controlador->mostrarActividadUser((int) $id);
+                        }
+                        , 'get');
+
                 //editar un usuario
                 Route::add('/usuario/edit/([0-9]+)',
                         function ($id) {

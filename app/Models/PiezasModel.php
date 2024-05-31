@@ -15,6 +15,18 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
                         . " c.nombreCategoria, c.idCategoria, f.idFamilia, f.nombreFamilia FROM pieza p JOIN categoria c ON p.idCategoria = c.idCategoria"
                         . " JOIN familia f ON c.idFamilia = f.idFamilia ORDER BY p.nombreOficial")->fetchAll();
     }
+    
+    /**
+     * devuelve el número de piezas que se están usando
+     * @return array la info
+     */
+    function getPiezasEnUso(): array {
+        return $this->pdo->query("SELECT SUM(cantidad) AS totalPiezasUsadas FROM piezas_evento")->fetch();
+    }
+    
+    function getPiezasDisponibles(): array{
+        return $this->pdo->query("SELECT SUM(stockActual) AS totalStockActual FROM pieza")->fetch();
+    }
 
     /**
      * selecciona las piezas con el idFamilia e idCategoria que se pasan como parametros 

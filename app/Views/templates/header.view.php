@@ -9,7 +9,7 @@ head y el principop del body: header y parte del main de cada página
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Favicon -->
-        <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+        <link rel="icon" href="assets/img/iconoRana.png" type="image/x-icon">
         <title>Litoria</title>
 
         <!-- Select2 -->
@@ -26,6 +26,7 @@ head y el principop del body: header y parte del main de cada página
 
         <!-- Theme style -->
         <link rel="stylesheet" href="assets/css/sb-admin-2.css">
+
     </head>
 
     <body id="page-top">
@@ -38,6 +39,9 @@ head y el principop del body: header y parte del main de cada página
 
                 <!-- Sidebar - Brand -->
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                    <div class="sidebar-brand-icon">
+                        <i class="fas fa-frog text-success"></i>
+                    </div>
                     <div class="sidebar-brand-text mx-3 text-success">Litoria Produccións</div>
                 </a>
 
@@ -84,10 +88,6 @@ head y el principop del body: header y parte del main de cada página
                                         <a class="dropdown-item" href="/editarPerfil/<?php echo $_SESSION['usuario']['idUsuario']; ?>">
                                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Editar perfil
-                                        </a>
-                                        <a class="dropdown-item" href="/actividad/<?php echo $_SESSION['usuario']['idUsuario']; ?>" target="_blank">
-                                            <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            Log de actividad
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">

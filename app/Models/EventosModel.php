@@ -15,6 +15,14 @@ class EventosModel extends \Com\Daw2\Core\BaseModel {
         return $this->pdo->query("SELECT e.idEvento, e.nombreEvento, e.fechaInicioEstimada, e.fechaFinalEstimada, e.fechaFinalReal, e.lugarEvento, e.terminado, e.observaciones, "
                         . "c.idCliente, c.nombreFiscalCliente FROM evento e JOIN cliente c ON e.idCliente = c.idCliente ORDER BY e.terminado ASC, e.fechaInicioEstimada DESC")->fetchAll();
     }
+    
+    /**
+     * selecciona los eventos que no se han terminado
+     * @return array la info de los eventos
+     */
+    function getEventosNoTerminados() : array {
+        return $this->pdo->query("SELECT * FROM evento WHERE terminado = 0")->fetchAll();
+    }
 
     /**
      * añade un evento a la base de datps

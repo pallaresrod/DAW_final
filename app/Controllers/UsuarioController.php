@@ -176,7 +176,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
 
     private function checkAddForm(array $data): array {
         $errores = [];
-        
+
         //email
         if (empty($data['email'])) {
             $errores['email'] = 'Inserte un email';
@@ -220,7 +220,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
                 $errores['idRol'] = 'Valor incorrecto';
             }
         }
-        
+
         array_merge($errores, $this->checkPassForm($data));
 
         return $errores;
@@ -261,15 +261,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             'actividad' => $modelo->getActivity($idUsuario)
         );
 
-        //un ususario puede ver su propia actividad, pero solo un admin puede ver la actividad del resto
-        if ($_SESSION['usuario']['idUsuario'] === $idUsuario) {
-            $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
-        } else if (strpos($_SESSION['permisos'], 'w') !== false) {
-            $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
-        } else {
-            $error = new \Com\Daw2\Controllers\ErroresController();
-            $error->error404();
-        }
+        $this->view->showViews(array('templates/header.view.php', 'userActivityLog.view.php', 'templates/footer.view.php'), $data);
     }
 
     /**
@@ -424,7 +416,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
             header('location: /usuarios');
         }
     }
-    
+
     /**
      * procesa la petición para editar un perfil
      * @param int $idUsuario el usuario que quiere editar su perfil
@@ -432,19 +424,19 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     function procesarEditarPerfil(int $idUsuario) {
         //comprueba errores
         $errores = $this->checkEditPerfilForm($_POST, $idUsuario);
-        
+
         //si no hay errores se actualizan los valores valor en la base de datos
         if (count($errores) == 0) {
             $model = new \Com\Daw2\Models\UsuariosModel();
-            
+
             $usuario = $model->editPerfil($idUsuario, $_POST);
-            
-            if(!empty($_POST['pass1'])){
-                $pass= $model->editPassword($idUsuario, $_POST['pass1']);
-            }else{
+
+            if (!empty($_POST['pass1'])) {
+                $pass = $model->editPassword($idUsuario, $_POST['pass1']);
+            } else {
                 $pass = true;
             }
-            
+
             if ($usuario && $pass) {
                 header('location: /usuarios');
                 die;
@@ -472,16 +464,16 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
      * @return array los errores encontrados
      */
     private function checkEditPerfilForm(array $data, int $idUsuario): array {
-        
+
         $errores = [];
-        
+
         //comprueba el nombre
         if (empty($data['nombre'])) {
             $errores['nombre'] = 'Inserte un nombre';
         } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{1,255}$/', $data['nombre'])) {
             $errores['nombre'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
         }
-        
+
         //email
         if (empty($data['email'])) {
             $errores['email'] = 'Inserte un email';
@@ -507,8 +499,8 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
                 $errores['login'] = 'El nombre de usuario seleccionado ya está en uso';
             }
         }
-        
-        if(!empty($data['pass1'])){
+
+        if (!empty($data['pass1'])) {
             array_merge($errores, $this->checkPassForm($data));
         }
 
@@ -516,4 +508,5 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
     }
 
 }
+
 ?>
