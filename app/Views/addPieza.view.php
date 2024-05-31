@@ -45,7 +45,7 @@
                                 <p class="text-danger"><?php echo isset($errores['codigoMarca']) ? $errores['codigoMarca'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="number" step="0.01" class="form-control " id="precio" name="precio"
+                                <input type="number" step="0.001" class="form-control " id="precio" name="precio"
                                        value="<?php echo isset($input['precio']) ? $input['precio'] : ''; ?>" placeholder="Precio">
                                 <p class="text-danger"><?php echo isset($errores['precio']) ? $errores['precio'] : ''; ?></p>
                             </div>
@@ -57,13 +57,13 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="text" class="form-control " id="longitud" name="longitud"
-                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud. Ej:45.6cm">
+                                <input type="number" step="0.001" class="form-control " id="longitud" name="longitud"
+                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud">
                                 <p class="text-danger"><?php echo isset($errores['longitud']) ? $errores['longitud'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="text" class="form-control " id="peso" name="peso"
-                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso. Ej:1.3kg">
+                                <input type="number" step="0.001" class="form-control " id="peso" name="peso"
+                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso">
                                 <p class="text-danger"><?php echo isset($errores['peso']) ? $errores['peso'] : ''; ?></p>
                             </div>
                         </div>

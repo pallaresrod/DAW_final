@@ -214,7 +214,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
                 $mensaje['class'] = 'success';
                 $mensaje['texto'] = 'Pieza eliminada con éxito.';
             }
-        }else {
+        } else {
             $mensaje = [];
             $mensaje['class'] = 'danger';
             $mensaje['texto'] = 'No se ha podido borrar la pieza, pues se está usando o se previene usar en eventos. '
@@ -282,8 +282,8 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         if (empty($data['codigoPieza'])) {
             $errores['codigoPieza'] = 'Inserte el código de la pieza';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9_]{1,255}$/', $data['codigoPieza'])) {
-            $errores['codigoPieza'] = 'El código debe ser menor a 255 caracteres y solo puede contener letras, números y _';
+        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]{1,255}$/', $data['codigoPieza'])) {
+            $errores['codigoPieza'] = 'El código debe ser menor a 255 caracteres y solo puede contener letras, números y espacios';
         }
 
         if (empty($data['nombreOficial'])) {
@@ -310,22 +310,22 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
             $errores['stock'] = 'Valor incorrecto';
         }
 
-        if (empty($data['peso'])) {
-            $errores['peso'] = 'Inserte el peso';
-        } else if (!preg_match('/^\d+(\.\d+)?[a-zA-Z]+$/', $data['peso'])) {
-            $errores['peso'] = 'Valor incorrecto. Introduzca el peso de la siguente manera: Ej. 4.3kg';
+        if (!empty($data['peso'])) {
+            if (!filter_var($data['peso'], FILTER_VALIDATE_FLOAT)) {
+                $errores['peso'] = 'Valor incorrecto.';
+            }
         }
 
-        if (empty($data['longitud'])) {
-            $errores['longitud'] = 'Inserte la longitud';
-        } else if (!preg_match('/^\d+(\.\d+)?[a-zA-Z]+$/', $data['longitud'])) {
-            $errores['longitud'] = 'Valor incorrecto. Introduzca la longitud de la siguente manera: Ej 50.3cm';
+        if (!empty($data['longitud'])) {
+            if (!filter_var($data['longitud'], FILTER_VALIDATE_FLOAT)) {
+                $errores['longitud'] = 'Valor incorrecto.';
+            }
         }
 
         if (!empty($data['observaciones'])) {
             if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{4,255}$/', $data['observaciones'])) {
-            $errores['observaciones'] = 'El texto de observaciones debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
-        }
+                $errores['observaciones'] = 'El texto de observaciones debe estar entre 4 y 255 caracteres y solo puede contener letras, números y espacios';
+            }
         }
 
         if (empty($data['idCategoria'])) {
