@@ -44,8 +44,8 @@ CREATE TABLE pieza (
     precio DECIMAL(7, 2),
     stock INT,
     stockActual INT DEFAULT NULL,
-    peso VARCHAR(20),
-    longitud VARCHAR(20),
+    peso DECIMAL(7, 2),
+    longitud DECIMAL(7, 2),
     observaciones VARCHAR(255),
     idCategoria INT
 );
@@ -125,21 +125,24 @@ INSERT INTO rol (idRol, nombreRol, descripcion) VALUES
 (2, "lectura", "Permisos de solo lectura");
 
 -- INSERCCION DE DATOS DE PRUEBA
+-- usuarios
 INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES ('test_1', '$2y$10$H5cCHNjCCY/6fXWi0ldgf.exQXQaar5j/SL6P5roQqcLJUfljqPMy', 'Test Uno', 'test@uno.com', 1); -- pass: TestTest1
-INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES ('test_2', '$2y$10$JM84GL/mFJ9wHQ3YUX9nIOumSSgO.l9NAkpPr.NXATd9xFYXHaH1i', 'Test Dos', 'test@dos.com', 1); -- pass: TestTest2
-INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES ('test_3', '$2y$10$39cK72KXZTWtbbs0UEvXj.Gon3Qd5wc9XoixFXdz0r2gKRtpm8BCW', 'Test Tres', 'test@tres.com', 1); -- pass: TestTest3
+INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES ('test_2', '$2y$10$JM84GL/mFJ9wHQ3YUX9nIOumSSgO.l9NAkpPr.NXATd9xFYXHaH1i', 'Test Dos', 'test@dos.com', 2); -- pass: TestTest2
+INSERT INTO usuario (login, pass, nombre, email, idRol) VALUES ('test_3', '$2y$10$39cK72KXZTWtbbs0UEvXj.Gon3Qd5wc9XoixFXdz0r2gKRtpm8BCW', 'Test Tres', 'test@tres.com', 2); -- pass: TestTest3
 
-INSERT INTO familia (nombreFamilia, descripcion) VALUES ('Familia Test uno', 'Test de familia 1');
-INSERT INTO familia (nombreFamilia, descripcion) VALUES ('Familia Test dos', 'Test de familia 2');
-INSERT INTO familia (nombreFamilia, descripcion) VALUES ('Familia Test tres', 'Test de familia 3');
+-- familias
+INSERT INTO familia (nombreFamilia, descripcion) VALUES
+('Layher', 'Elementos Layher'),
+('Orbit', 'Techos Orbit'),
+('Truss Fantek', 'Truss de Fantek');
 
-INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Categoria Test uno', 'Test de categoria 1', 1);
-INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Categoria Test dos', 'Test de categoria 2', 2);
-INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Categoria Test tres', 'Test de categoria 3', 3);
-INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Categoria Test cuatro', 'Test de categoria 4', 2);
-
-INSERT INTO pieza (codigoPieza, nombreOficial, codigoMarca, precio, stock, peso, longitud, observaciones, idCategoria) VALUES ('testPieza', 'Test de Pieza', '1234.123', 100.99, 10, '100g', '40cm', 'observaciones', 2);
-INSERT INTO pieza (codigoPieza, nombreOficial, codigoMarca, precio, stock, peso, longitud, observaciones, idCategoria) VALUES ('testPiezaDos', 'Test de Pieza 2', '4321.123', 200.99, 20, '200g', '60cm', 'observaciones', 4);
+-- categorias
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Ligeras Layher', 'Piezas ligeras Layher. Meno de 15kg', 1);
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Pesadas Layher', 'Piezas pesadas Layher. Más de 15kg', 1);
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Ligeras Orbit', 'Piezas ligeras Orbit. Menos de 15kg', 2);
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Pesadas Orbit', 'Piezas pesadas Orbit. Más de 15kg', 2);
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Ligeras Truss Fantek', 'Piezas ligeras Truss de Fantek. Meno de 15kg', 3);
+INSERT INTO categoria (nombreCategoria, descripcion, idFamilia) VALUES ('Pesadas Truss Fantek', 'Piezas pesadas Truss de Fantek. Más de 15kg', 3);
 
 
 

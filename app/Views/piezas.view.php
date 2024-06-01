@@ -77,7 +77,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <?php
-                if (count($categorias) > 0) {
+                if (count($piezas) > 0) {
                     ?>
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                    
                         <thead>

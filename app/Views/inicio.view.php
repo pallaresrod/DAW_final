@@ -92,35 +92,45 @@ Página de inicio, la página a la que se accede cuando entras en la aplicación
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                    
-                    <thead>
-                        <tr>
-                            <th>Día</th>
-                            <th>Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($actividad as $a) {
-                            $datetime = new DateTime($a['log']);
-                            $dia = $datetime->format('d-m-Y');
-                            $hora = $datetime->format('H:i:s');
-                            ?>
+                <?php
+                if (count($actividad) > 0) {
+                    ?>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">                    
+                        <thead>
                             <tr>
-                                <td><?php echo $dia; ?></td>
-                                <td><?php echo $hora; ?></td>
+                                <th>Día</th>
+                                <th>Hora</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                        }
-                        ?>
-                    </tbody>
-                    <tfoot>
-                        Total de registros: <?php echo count($actividad); ?>
-                    </tfoot>
-                </table>
-                <div id="pagination" class="mt-3 text-center">
-                    <!-- Los controles de paginación son generados por JavaScript si es necesario-->
-                </div>
+                            foreach ($actividad as $a) {
+                                $datetime = new DateTime($a['log']);
+                                $dia = $datetime->format('d-m-Y');
+                                $hora = $datetime->format('H:i:s');
+                                ?>
+                                <tr>
+                                    <td><?php echo $dia; ?></td>
+                                    <td><?php echo $hora; ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                        <tfoot>
+                            Total de registros: <?php echo count($actividad); ?>
+                        </tfoot>
+                    </table>
+                    <div id="pagination" class="mt-3 text-center">
+                        <!-- Los controles de paginación son generados por JavaScript si es necesario-->
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <p class="text-danger">No existen registros de sus últimas conexiones.</p>
+                    <?php
+                }
+                ?>
             </div>
         </div>
     </div>

@@ -306,7 +306,7 @@ class EventosController extends \Com\Daw2\Core\BaseController {
 
         $data = array(
             'titulo' => 'Piezas para el evento',
-            'input' => filter_var_array($_POST, FILTER_SANITIZE_SPECIAL_CHARS),
+            'input' => $_POST,
             'errores' => $errores,
             'evento' => $evento,
             'piezas' => $piezas

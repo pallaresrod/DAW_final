@@ -160,8 +160,8 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             'codigoMarca' => $data['codigoMarca'],
             'precio' => $data['precio'],
             'stock' => $data['stock'],
-            'peso' => $data['peso'],
-            'longitud' => $data['longitud'],
+            'peso' => !empty($data['peso']) ? $data['peso'] : null,
+            'longitud' => !empty($data['longitud']) ? $data['longitud'] : null,
             'observaciones' => trim($data['observaciones']),
             'idCategoria' => $data['idCategoria'],
             'idPieza' => $idPieza
@@ -199,8 +199,8 @@ class PiezasModel extends \Com\Daw2\Core\BaseModel {
             'codigoMarca' => $data['codigoMarca'],
             'precio' => $data['precio'],
             'stock' => $data['stock'],
-            'peso' => $data['peso'],
-            'longitud' => $data['longitud'],
+            'peso' => !empty($data['peso']) ? $data['peso'] : null,
+            'longitud' => !empty($data['longitud']) ? $data['longitud'] : null,
             'observaciones' => trim($data['observaciones']),
             'idCategoria' => $data['idCategoria']
         ];

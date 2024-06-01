@@ -59,7 +59,7 @@ Esta página contiene el menu principal del sitio, situado en el header
 <!-- Nav Item - Clientes -->
 
 <li class="nav-item">
-    <a class="nav-link" href="/">
+    <a class="nav-link" href="/clientes">
         <i class="fas fa-fw fa-user"></i>
         <span>Clientes</span></a>
 </li>

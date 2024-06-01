@@ -166,6 +166,7 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
     function procesarAdd() {
         //comprueba errores
         $errores = $this->checkAddForm($_POST);
+        
 
         //si no hay errores se inserta el valor en la base de datos
         if (count($errores) == 0) {
@@ -282,14 +283,14 @@ class PiezasController extends \Com\Daw2\Core\BaseController {
 
         if (empty($data['codigoPieza'])) {
             $errores['codigoPieza'] = 'Inserte el código de la pieza';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]{1,255}$/', $data['codigoPieza'])) {
+        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{1,255}$/', $data['codigoPieza'])) {
             $errores['codigoPieza'] = 'El código debe ser menor a 255 caracteres y solo puede contener letras, números y espacios';
         }
 
         if (empty($data['nombreOficial'])) {
             $errores['nombreOficial'] = 'Inserte un nombre';
-        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{1,255}$/', $data['nombreOficial'])) {
-            $errores['nombreOficial'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras y espacios';
+        } else if (!preg_match('/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9,. ]{1,255}$/', $data['nombreOficial'])) {
+            $errores['nombreOficial'] = 'El nombre debe ser menor a 255 caracteres y solo puede contener letras, números y espacios';
         }
 
         if (empty($data['codigoMarca'])) {

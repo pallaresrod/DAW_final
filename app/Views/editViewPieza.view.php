@@ -64,13 +64,13 @@
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <label for="longitud">Longitud:</label>
                                 <input type="number" step="0.001" class="form-control " id="longitud" name="longitud" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
-                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud">
+                                       value="<?php echo isset($input['longitud']) ? $input['longitud'] : ''; ?>" placeholder="Longitud. m">
                                 <p class="text-danger"><?php echo isset($errores['longitud']) ? $errores['longitud'] : ''; ?></p>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <label for="peso">Peso:</label>
                                 <input type="number" step="0.001" class="form-control " id="peso" name="peso" <?php echo (isset($readonly) && $readonly) ? 'readonly' : ''; ?>
-                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso">
+                                       value="<?php echo isset($input['peso']) ? $input['peso'] : ''; ?>" placeholder="Peso. kg">
                                 <p class="text-danger"><?php echo isset($errores['peso']) ? $errores['peso'] : ''; ?></p>
                             </div>
                         </div>
