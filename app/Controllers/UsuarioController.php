@@ -175,7 +175,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
      */
 
     private function checkAddForm(array $data): array {
-        $errores = [];
+        $errores = $this->checkPassForm($data);
 
         //email
         if (empty($data['email'])) {
@@ -220,8 +220,6 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
                 $errores['idRol'] = 'Valor incorrecto';
             }
         }
-
-        array_merge($errores, $this->checkPassForm($data));
 
         return $errores;
     }
@@ -465,6 +463,9 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
      */
     private function checkEditPerfilForm(array $data, int $idUsuario): array {
 
+        if (!empty($data['pass1'])) {
+            $errores = $this->checkPassForm($data);
+        }
         $errores = [];
 
         //comprueba el nombre
@@ -499,11 +500,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController {
                 $errores['login'] = 'El nombre de usuario seleccionado ya está en uso';
             }
         }
-
-        if (!empty($data['pass1'])) {
-            array_merge($errores, $this->checkPassForm($data));
-        }
-
+        
         return $errores;
     }
 
